@@ -1,0 +1,745 @@
+{
+  "spaces": [
+    {
+      "space_id": "space-prod-platform",
+      "space_name": "Production Incidents",
+      "messages": [
+        {
+          "message_id": "msg-001",
+          "thread_id": "thread-001",
+          "user": "Rahul",
+          "timestamp": "2026-08-01T09:10:00Z",
+          "text": "Payment API is returning HTTP 500 errors in production. Multiple customers unable to complete transactions."
+        },
+        {
+          "message_id": "msg-002",
+          "thread_id": "thread-001",
+          "user": "Ankit",
+          "timestamp": "2026-08-01T09:12:00Z",
+          "text": "Checking logs now. Seeing a lot of connection timeout errors in the payment-service pod logs."
+        },
+        {
+          "message_id": "msg-003",
+          "thread_id": "thread-001",
+          "user": "Priya",
+          "timestamp": "2026-08-01T09:14:00Z",
+          "text": "Database monitoring shows active connections at 50/50. Pool is completely exhausted."
+        },
+        {
+          "message_id": "msg-004",
+          "thread_id": "thread-001",
+          "user": "Rahul",
+          "timestamp": "2026-08-01T09:15:00Z",
+          "text": "Maximum DB connections is currently configured to 50. That was set during initial deployment and never adjusted."
+        },
+        {
+          "message_id": "msg-005",
+          "thread_id": "thread-001",
+          "user": "Ankit",
+          "timestamp": "2026-08-01T09:18:00Z",
+          "text": "Traffic has increased 3x since last month. 50 connections is clearly insufficient now."
+        },
+        {
+          "message_id": "msg-006",
+          "thread_id": "thread-001",
+          "user": "Ankit",
+          "timestamp": "2026-08-01T09:20:00Z",
+          "text": "Increasing the pool size to 100 and restarting payment-service. Applying config change now."
+        },
+        {
+          "message_id": "msg-007",
+          "thread_id": "thread-001",
+          "user": "Ankit",
+          "timestamp": "2026-08-01T09:25:00Z",
+          "text": "Service is stable now. Error rate has returned to normal. Active connections at 35/100."
+        },
+        {
+          "message_id": "msg-008",
+          "thread_id": "thread-001",
+          "user": "Rahul",
+          "timestamp": "2026-08-01T09:30:00Z",
+          "text": "Resolved. Root cause was DB connection pool exhaustion due to increased traffic without capacity adjustment."
+        },
+        {
+          "message_id": "msg-009",
+          "thread_id": "thread-002",
+          "user": "Deepak",
+          "timestamp": "2026-08-02T14:05:00Z",
+          "text": "Order Service is throwing HTTP 503 Service Unavailable errors. Customers seeing failures at checkout."
+        },
+        {
+          "message_id": "msg-010",
+          "thread_id": "thread-002",
+          "user": "Meera",
+          "timestamp": "2026-08-02T14:08:00Z",
+          "text": "Kubernetes dashboard shows order-service pods are in CrashLoopBackOff. Only 1 of 5 replicas running."
+        },
+        {
+          "message_id": "msg-011",
+          "thread_id": "thread-002",
+          "user": "Deepak",
+          "timestamp": "2026-08-02T14:10:00Z",
+          "text": "Pod logs show OOMKilled. Memory usage spiking to 2GB before kill. Current limit is 2Gi."
+        },
+        {
+          "message_id": "msg-012",
+          "thread_id": "thread-002",
+          "user": "Meera",
+          "timestamp": "2026-08-02T14:15:00Z",
+          "text": "Found the issue. Yesterday's deployment added a new caching layer that loads all product catalog into memory on startup."
+        },
+        {
+          "message_id": "msg-013",
+          "thread_id": "thread-002",
+          "user": "Deepak",
+          "timestamp": "2026-08-02T14:18:00Z",
+          "text": "Product catalog is 1.8GB now. That plus JVM overhead exceeds the 2GB limit."
+        },
+        {
+          "message_id": "msg-014",
+          "thread_id": "thread-002",
+          "user": "Meera",
+          "timestamp": "2026-08-02T14:25:00Z",
+          "text": "Rolling back the caching change and increasing memory limit to 4Gi as temporary fix."
+        },
+        {
+          "message_id": "msg-015",
+          "thread_id": "thread-002",
+          "user": "Deepak",
+          "timestamp": "2026-08-02T14:35:00Z",
+          "text": "All pods back to Running state. Order processing has resumed. Error rate at 0%."
+        },
+        {
+          "message_id": "msg-016",
+          "thread_id": "thread-002",
+          "user": "Meera",
+          "timestamp": "2026-08-02T14:40:00Z",
+          "text": "Root cause: Memory exhaustion caused by loading full product catalog into in-memory cache without size limits. Rolling back deployment resolved it."
+        },
+        {
+          "message_id": "msg-017",
+          "thread_id": "thread-003",
+          "user": "Sanjay",
+          "timestamp": "2026-08-03T08:30:00Z",
+          "text": "Authentication Service is rejecting all login requests. Users getting 401 Unauthorized across all applications."
+        },
+        {
+          "message_id": "msg-018",
+          "thread_id": "thread-003",
+          "user": "Kavita",
+          "timestamp": "2026-08-03T08:33:00Z",
+          "text": "Checking auth-service logs. Seeing 'JWT verification failed: certificate expired' errors."
+        },
+        {
+          "message_id": "msg-019",
+          "thread_id": "thread-003",
+          "user": "Sanjay",
+          "timestamp": "2026-08-03T08:35:00Z",
+          "text": "The signing certificate shows expiry date of 2026-08-02. It expired yesterday!"
+        },
+        {
+          "message_id": "msg-020",
+          "thread_id": "thread-003",
+          "user": "Kavita",
+          "timestamp": "2026-08-03T08:38:00Z",
+          "text": "We need to generate a new certificate and update it in the secrets. No auto-rotation was configured."
+        },
+        {
+          "message_id": "msg-021",
+          "thread_id": "thread-003",
+          "user": "Sanjay",
+          "timestamp": "2026-08-03T08:45:00Z",
+          "text": "Generated new cert with 1-year validity. Updating Kubernetes secret now."
+        },
+        {
+          "message_id": "msg-022",
+          "thread_id": "thread-003",
+          "user": "Kavita",
+          "timestamp": "2026-08-03T08:50:00Z",
+          "text": "Secret updated. Restarting auth-service pods to pick up new cert."
+        },
+        {
+          "message_id": "msg-023",
+          "thread_id": "thread-003",
+          "user": "Sanjay",
+          "timestamp": "2026-08-03T08:55:00Z",
+          "text": "Login working again across all services. Confirmed with multiple test accounts."
+        },
+        {
+          "message_id": "msg-024",
+          "thread_id": "thread-003",
+          "user": "Kavita",
+          "timestamp": "2026-08-03T09:00:00Z",
+          "text": "Resolved. Root cause was expired JWT signing certificate. No auto-renewal was configured. Adding cert-manager rotation as follow-up task."
+        },
+        {
+          "message_id": "msg-025",
+          "thread_id": "thread-004",
+          "user": "Vikram",
+          "timestamp": "2026-08-04T11:00:00Z",
+          "text": "Notification Service is not sending any emails or SMS. No errors in dashboard but users are not receiving OTPs."
+        },
+        {
+          "message_id": "msg-026",
+          "thread_id": "thread-004",
+          "user": "Arun",
+          "timestamp": "2026-08-04T11:05:00Z",
+          "text": "Checking Kafka consumer group. Notification-consumer shows lag of 50,000 messages and increasing."
+        },
+        {
+          "message_id": "msg-027",
+          "thread_id": "thread-004",
+          "user": "Vikram",
+          "timestamp": "2026-08-04T11:08:00Z",
+          "text": "Consumer instances show they're connected but not processing. All in rebalancing state."
+        },
+        {
+          "message_id": "msg-028",
+          "thread_id": "thread-004",
+          "user": "Arun",
+          "timestamp": "2026-08-04T11:12:00Z",
+          "text": "Found it. Last deploy changed the consumer group ID. The new group started from latest offset, missing all pending messages. Also, session timeout is too low causing constant rebalancing."
+        },
+        {
+          "message_id": "msg-029",
+          "thread_id": "thread-004",
+          "user": "Vikram",
+          "timestamp": "2026-08-04T11:20:00Z",
+          "text": "Reverting consumer group ID to original and increasing session.timeout.ms from 10000 to 30000."
+        },
+        {
+          "message_id": "msg-030",
+          "thread_id": "thread-004",
+          "user": "Arun",
+          "timestamp": "2026-08-04T11:30:00Z",
+          "text": "Consumer is processing again. Lag dropping rapidly. OTP messages being delivered now."
+        },
+        {
+          "message_id": "msg-031",
+          "thread_id": "thread-004",
+          "user": "Vikram",
+          "timestamp": "2026-08-04T11:35:00Z",
+          "text": "Resolved. Root cause: Kafka consumer group ID changed in deployment causing consumer rebalancing loop. Reverting group ID and increasing session timeout fixed it."
+        },
+        {
+          "message_id": "msg-032",
+          "thread_id": "thread-005",
+          "user": "Priya",
+          "timestamp": "2026-08-05T16:00:00Z",
+          "text": "Customer Service API response times have gone from 200ms to 15 seconds. Multiple timeout errors from upstream services."
+        },
+        {
+          "message_id": "msg-033",
+          "thread_id": "thread-005",
+          "user": "Rahul",
+          "timestamp": "2026-08-05T16:03:00Z",
+          "text": "Database query analysis shows a specific query taking 12 seconds. It's the customer search query with LIKE '%pattern%'."
+        },
+        {
+          "message_id": "msg-034",
+          "thread_id": "thread-005",
+          "user": "Priya",
+          "timestamp": "2026-08-05T16:06:00Z",
+          "text": "Checking pg_locks. There are 8 blocked transactions waiting. Two long-running transactions holding row locks."
+        },
+        {
+          "message_id": "msg-035",
+          "thread_id": "thread-005",
+          "user": "Rahul",
+          "timestamp": "2026-08-05T16:10:00Z",
+          "text": "Found the deadlock. A batch update job and the API are both trying to acquire locks on the same rows in opposite order."
+        },
+        {
+          "message_id": "msg-036",
+          "thread_id": "thread-005",
+          "user": "Priya",
+          "timestamp": "2026-08-05T16:15:00Z",
+          "text": "Killing the batch job process. We need to add proper lock ordering to prevent this."
+        },
+        {
+          "message_id": "msg-037",
+          "thread_id": "thread-005",
+          "user": "Rahul",
+          "timestamp": "2026-08-05T16:20:00Z",
+          "text": "Batch job killed. Blocked transactions released. Response times back to normal 200ms."
+        },
+        {
+          "message_id": "msg-038",
+          "thread_id": "thread-005",
+          "user": "Priya",
+          "timestamp": "2026-08-05T16:25:00Z",
+          "text": "Resolved. Root cause: Database deadlock between batch update job and API requests. Inconsistent lock ordering caused mutual blocking. Fixed by terminating batch job. Need to redesign lock strategy."
+        },
+        {
+          "message_id": "msg-039",
+          "thread_id": "thread-006",
+          "user": "Ankit",
+          "timestamp": "2026-08-06T07:45:00Z",
+          "text": "Inventory Service is returning stale data. Stock counts don't match warehouse system. Customers ordering out-of-stock items."
+        },
+        {
+          "message_id": "msg-040",
+          "thread_id": "thread-006",
+          "user": "Deepak",
+          "timestamp": "2026-08-06T07:48:00Z",
+          "text": "Redis cache shows inventory data with TTL of -1. Data was cached but never being refreshed."
+        },
+        {
+          "message_id": "msg-041",
+          "thread_id": "thread-006",
+          "user": "Ankit",
+          "timestamp": "2026-08-06T07:52:00Z",
+          "text": "The cache invalidation worker connects to Redis cluster. Connection logs show 'READONLY You can not write against a read only replica'."
+        },
+        {
+          "message_id": "msg-042",
+          "thread_id": "thread-006",
+          "user": "Deepak",
+          "timestamp": "2026-08-06T07:55:00Z",
+          "text": "Redis failover happened yesterday. The worker is still connected to the old master which is now a replica. No auto-reconnect configured."
+        },
+        {
+          "message_id": "msg-043",
+          "thread_id": "thread-006",
+          "user": "Ankit",
+          "timestamp": "2026-08-06T08:00:00Z",
+          "text": "Restarting the cache invalidation worker. Also enabling Redis Sentinel support so it auto-discovers the new master."
+        },
+        {
+          "message_id": "msg-044",
+          "thread_id": "thread-006",
+          "user": "Deepak",
+          "timestamp": "2026-08-06T08:10:00Z",
+          "text": "Worker restarted and connected to correct master. Cache flushed and repopulating with fresh data."
+        },
+        {
+          "message_id": "msg-045",
+          "thread_id": "thread-006",
+          "user": "Ankit",
+          "timestamp": "2026-08-06T08:15:00Z",
+          "text": "Resolved. Root cause: Redis connection failure after failover. Cache invalidation worker was connected to old master (now replica). Fixed by restarting worker and enabling Sentinel-aware connections."
+        },
+        {
+          "message_id": "msg-046",
+          "thread_id": "thread-007",
+          "user": "Meera",
+          "timestamp": "2026-08-07T10:30:00Z",
+          "text": "Loan Service approval workflow is failing. All loan applications stuck in PENDING state for the last 2 hours."
+        },
+        {
+          "message_id": "msg-047",
+          "thread_id": "thread-007",
+          "user": "Sanjay",
+          "timestamp": "2026-08-07T10:33:00Z",
+          "text": "Checking the external credit scoring API integration. Getting connection timeout errors to credit-bureau.example.com."
+        },
+        {
+          "message_id": "msg-048",
+          "thread_id": "thread-007",
+          "user": "Meera",
+          "timestamp": "2026-08-07T10:36:00Z",
+          "text": "DNS resolution for credit-bureau.example.com is failing. nslookup returns SERVFAIL."
+        },
+        {
+          "message_id": "msg-049",
+          "thread_id": "thread-007",
+          "user": "Sanjay",
+          "timestamp": "2026-08-07T10:40:00Z",
+          "text": "Our CoreDNS pods are running but the upstream forwarder was changed in yesterday's infra update. It's pointing to a decommissioned DNS server."
+        },
+        {
+          "message_id": "msg-050",
+          "thread_id": "thread-007",
+          "user": "Meera",
+          "timestamp": "2026-08-07T10:45:00Z",
+          "text": "Updating CoreDNS ConfigMap to point to the correct upstream DNS servers. Restarting CoreDNS pods."
+        },
+        {
+          "message_id": "msg-051",
+          "thread_id": "thread-007",
+          "user": "Sanjay",
+          "timestamp": "2026-08-07T10:50:00Z",
+          "text": "DNS resolution working now. Loan service can reach credit bureau again. Stuck applications are being processed."
+        },
+        {
+          "message_id": "msg-052",
+          "thread_id": "thread-007",
+          "user": "Meera",
+          "timestamp": "2026-08-07T10:55:00Z",
+          "text": "Resolved. Root cause: DNS resolution failure due to CoreDNS upstream forwarder pointing to decommissioned server after infra update. Fixed by correcting DNS configuration."
+        },
+        {
+          "message_id": "msg-053",
+          "thread_id": "thread-008",
+          "user": "Kavita",
+          "timestamp": "2026-08-07T15:00:00Z",
+          "text": "Reporting Service dashboard is completely unresponsive. HTTP 500 on all report generation endpoints."
+        },
+        {
+          "message_id": "msg-054",
+          "thread_id": "thread-008",
+          "user": "Vikram",
+          "timestamp": "2026-08-07T15:03:00Z",
+          "text": "Application logs show 'java.lang.OutOfMemoryError: Java heap space' repeatedly."
+        },
+        {
+          "message_id": "msg-055",
+          "thread_id": "thread-008",
+          "user": "Kavita",
+          "timestamp": "2026-08-07T15:06:00Z",
+          "text": "Heap dump analysis shows 80% of memory consumed by a single ArrayList holding 5 million report rows."
+        },
+        {
+          "message_id": "msg-056",
+          "thread_id": "thread-008",
+          "user": "Vikram",
+          "timestamp": "2026-08-07T15:10:00Z",
+          "text": "The monthly report endpoint loads all data into memory before pagination. No streaming or chunking."
+        },
+        {
+          "message_id": "msg-057",
+          "thread_id": "thread-008",
+          "user": "Kavita",
+          "timestamp": "2026-08-07T15:15:00Z",
+          "text": "Quick fix: increasing JVM heap from 2G to 8G and adding -XX:+UseG1GC. Long-term fix needs streaming implementation."
+        },
+        {
+          "message_id": "msg-058",
+          "thread_id": "thread-008",
+          "user": "Vikram",
+          "timestamp": "2026-08-07T15:25:00Z",
+          "text": "Deployed with increased heap. Reports generating again. Will create ticket for streaming refactor."
+        },
+        {
+          "message_id": "msg-059",
+          "thread_id": "thread-008",
+          "user": "Kavita",
+          "timestamp": "2026-08-07T15:30:00Z",
+          "text": "Resolved. Root cause: Memory exhaustion in Reporting Service due to loading entire dataset into memory for monthly report. Temporary fix: increased heap size. Permanent fix: implement data streaming."
+        },
+        {
+          "message_id": "msg-060",
+          "thread_id": "thread-009",
+          "user": "Arun",
+          "timestamp": "2026-08-08T09:00:00Z",
+          "text": "Payment API returning HTTP 500 again. This is the third time this month. Customers complaining on social media."
+        },
+        {
+          "message_id": "msg-061",
+          "thread_id": "thread-009",
+          "user": "Priya",
+          "timestamp": "2026-08-08T09:03:00Z",
+          "text": "Different root cause this time. Not connection pool. Seeing 'Connection refused' to payment-gateway downstream service."
+        },
+        {
+          "message_id": "msg-062",
+          "thread_id": "thread-009",
+          "user": "Arun",
+          "timestamp": "2026-08-08T09:06:00Z",
+          "text": "Payment gateway pods are running but not ready. Readiness probe failing with 'TLS handshake timeout'."
+        },
+        {
+          "message_id": "msg-063",
+          "thread_id": "thread-009",
+          "user": "Priya",
+          "timestamp": "2026-08-08T09:10:00Z",
+          "text": "The payment gateway's TLS certificate was renewed yesterday but the new cert has a different CN. Our service is rejecting it due to hostname verification."
+        },
+        {
+          "message_id": "msg-064",
+          "thread_id": "thread-009",
+          "user": "Arun",
+          "timestamp": "2026-08-08T09:15:00Z",
+          "text": "Updating the trust store with the new certificate and the expected CN in our configuration."
+        },
+        {
+          "message_id": "msg-065",
+          "thread_id": "thread-009",
+          "user": "Priya",
+          "timestamp": "2026-08-08T09:20:00Z",
+          "text": "Configuration updated and service restarted. TLS handshake succeeding now. Payments flowing."
+        },
+        {
+          "message_id": "msg-066",
+          "thread_id": "thread-009",
+          "user": "Arun",
+          "timestamp": "2026-08-08T09:25:00Z",
+          "text": "Resolved. Root cause: Downstream payment gateway renewed TLS cert with different CN. Our hostname verification failed. Fixed by updating trust store and CN configuration."
+        },
+        {
+          "message_id": "msg-067",
+          "thread_id": "thread-010",
+          "user": "Rahul",
+          "timestamp": "2026-08-08T13:00:00Z",
+          "text": "Order Service is extremely slow. P99 latency jumped from 500ms to 30 seconds. No errors but everything is timing out."
+        },
+        {
+          "message_id": "msg-068",
+          "thread_id": "thread-010",
+          "user": "Deepak",
+          "timestamp": "2026-08-08T13:03:00Z",
+          "text": "CPU usage on order-service pods is at 98%. All 4 pods are maxed out."
+        },
+        {
+          "message_id": "msg-069",
+          "thread_id": "thread-010",
+          "user": "Rahul",
+          "timestamp": "2026-08-08T13:06:00Z",
+          "text": "Thread dump shows 200 threads stuck in a regex pattern matching loop. The new input validation regex is catastrophic."
+        },
+        {
+          "message_id": "msg-070",
+          "thread_id": "thread-010",
+          "user": "Deepak",
+          "timestamp": "2026-08-08T13:10:00Z",
+          "text": "Identified the regex: ^(a+)+$ in the order validation code deployed this morning. Classic ReDoS pattern."
+        },
+        {
+          "message_id": "msg-071",
+          "thread_id": "thread-010",
+          "user": "Rahul",
+          "timestamp": "2026-08-08T13:15:00Z",
+          "text": "Rolling back to previous deployment version. HPA is not helping because CPU is stuck in regex execution, not actual load."
+        },
+        {
+          "message_id": "msg-072",
+          "thread_id": "thread-010",
+          "user": "Deepak",
+          "timestamp": "2026-08-08T13:20:00Z",
+          "text": "Rollback complete. CPU back to normal 15%. Latency returned to 500ms P99."
+        },
+        {
+          "message_id": "msg-073",
+          "thread_id": "thread-010",
+          "user": "Rahul",
+          "timestamp": "2026-08-08T13:25:00Z",
+          "text": "Resolved. Root cause: CPU spike caused by catastrophic backtracking in regex validation (ReDoS). Rolled back deployment. Need to fix regex before redeploying."
+        },
+        {
+          "message_id": "msg-074",
+          "thread_id": "thread-011",
+          "user": "Vikram",
+          "timestamp": "2026-08-09T06:30:00Z",
+          "text": "Authentication Service returning 503. This is different from last week's cert issue. Service is up but overloaded."
+        },
+        {
+          "message_id": "msg-075",
+          "thread_id": "thread-011",
+          "user": "Kavita",
+          "timestamp": "2026-08-09T06:33:00Z",
+          "text": "Rate limiting is kicking in. Someone is hammering the login endpoint. 50,000 requests per minute from a single IP range."
+        },
+        {
+          "message_id": "msg-076",
+          "thread_id": "thread-011",
+          "user": "Vikram",
+          "timestamp": "2026-08-09T06:36:00Z",
+          "text": "Looks like a brute force attack. All requests targeting the /auth/login endpoint with different username/password combinations."
+        },
+        {
+          "message_id": "msg-077",
+          "thread_id": "thread-011",
+          "user": "Kavita",
+          "timestamp": "2026-08-09T06:40:00Z",
+          "text": "Adding WAF rule to block the IP range 103.45.x.x. Also increasing rate limit threshold and enabling CAPTCHA after 5 failed attempts."
+        },
+        {
+          "message_id": "msg-078",
+          "thread_id": "thread-011",
+          "user": "Vikram",
+          "timestamp": "2026-08-09T06:45:00Z",
+          "text": "WAF rule applied. Attack traffic blocked. Legitimate traffic flowing normally. No accounts compromised based on audit log."
+        },
+        {
+          "message_id": "msg-079",
+          "thread_id": "thread-011",
+          "user": "Kavita",
+          "timestamp": "2026-08-09T06:50:00Z",
+          "text": "Resolved. Root cause: Authentication Service overloaded by brute force login attack from single IP range. Fixed by blocking attacker IPs via WAF and enhancing rate limiting."
+        },
+        {
+          "message_id": "msg-080",
+          "thread_id": "thread-012",
+          "user": "Sanjay",
+          "timestamp": "2026-08-09T11:00:00Z",
+          "text": "Inventory Service sync job failing. New stock updates from warehouse not reflecting in the system since last night."
+        },
+        {
+          "message_id": "msg-081",
+          "thread_id": "thread-012",
+          "user": "Meera",
+          "timestamp": "2026-08-09T11:03:00Z",
+          "text": "The sync job connects to warehouse API. Logs show HTTP 401 Unauthorized from warehouse endpoint."
+        },
+        {
+          "message_id": "msg-082",
+          "thread_id": "thread-012",
+          "user": "Sanjay",
+          "timestamp": "2026-08-09T11:06:00Z",
+          "text": "API key for warehouse integration was rotated by their team yesterday. We were notified but the ticket was missed."
+        },
+        {
+          "message_id": "msg-083",
+          "thread_id": "thread-012",
+          "user": "Meera",
+          "timestamp": "2026-08-09T11:10:00Z",
+          "text": "Got the new API key from warehouse team. Updating the secret in vault and restarting sync job."
+        },
+        {
+          "message_id": "msg-084",
+          "thread_id": "thread-012",
+          "user": "Sanjay",
+          "timestamp": "2026-08-09T11:15:00Z",
+          "text": "Sync job running successfully now. Backlog of 500 inventory updates being processed. Should be caught up in 10 minutes."
+        },
+        {
+          "message_id": "msg-085",
+          "thread_id": "thread-012",
+          "user": "Meera",
+          "timestamp": "2026-08-09T11:20:00Z",
+          "text": "Resolved. Root cause: Warehouse API key rotation without updating our configuration. Authentication failure on downstream API. Fixed by updating API key in vault."
+        },
+        {
+          "message_id": "msg-086",
+          "thread_id": "thread-013",
+          "user": "Arun",
+          "timestamp": "2026-08-10T08:00:00Z",
+          "text": "Payment API returning HTTP 500 errors. Third incident on payment this week. Checking if it's the same DB pool issue."
+        },
+        {
+          "message_id": "msg-087",
+          "thread_id": "thread-013",
+          "user": "Priya",
+          "timestamp": "2026-08-10T08:03:00Z",
+          "text": "DB connection pool is fine at 45/100. This is something else. Error logs show 'Deadlock detected' on the transactions table."
+        },
+        {
+          "message_id": "msg-088",
+          "thread_id": "thread-013",
+          "user": "Arun",
+          "timestamp": "2026-08-10T08:06:00Z",
+          "text": "Two concurrent payment retries are updating the same transaction row. The retry logic doesn't acquire an advisory lock."
+        },
+        {
+          "message_id": "msg-089",
+          "thread_id": "thread-013",
+          "user": "Priya",
+          "timestamp": "2026-08-10T08:10:00Z",
+          "text": "The payment retry worker was deployed with parallel processing yesterday. Previous version was single-threaded so deadlocks were impossible."
+        },
+        {
+          "message_id": "msg-090",
+          "thread_id": "thread-013",
+          "user": "Arun",
+          "timestamp": "2026-08-10T08:15:00Z",
+          "text": "Adding SELECT FOR UPDATE NOWAIT before the payment update. Also reducing retry parallelism to 2 workers temporarily."
+        },
+        {
+          "message_id": "msg-091",
+          "thread_id": "thread-013",
+          "user": "Priya",
+          "timestamp": "2026-08-10T08:25:00Z",
+          "text": "Fix deployed. No more deadlocks in the last 10 minutes. Payment success rate back to 99.9%."
+        },
+        {
+          "message_id": "msg-092",
+          "thread_id": "thread-013",
+          "user": "Arun",
+          "timestamp": "2026-08-10T08:30:00Z",
+          "text": "Resolved. Root cause: Database deadlock in payment transactions caused by parallel retry workers without proper lock ordering. Fixed with SELECT FOR UPDATE NOWAIT and reduced parallelism."
+        },
+        {
+          "message_id": "msg-093",
+          "thread_id": "thread-014",
+          "user": "Deepak",
+          "timestamp": "2026-08-10T14:00:00Z",
+          "text": "Notification Service email delivery rate dropped to 0%. SMS still working. No errors in our logs."
+        },
+        {
+          "message_id": "msg-094",
+          "thread_id": "thread-014",
+          "user": "Vikram",
+          "timestamp": "2026-08-10T14:03:00Z",
+          "text": "SMTP connection to our email provider is succeeding but emails are being silently dropped. Checking provider dashboard."
+        },
+        {
+          "message_id": "msg-095",
+          "thread_id": "thread-014",
+          "user": "Deepak",
+          "timestamp": "2026-08-10T14:06:00Z",
+          "text": "Email provider shows our sending domain SPF record is invalid. Someone modified our DNS TXT records yesterday during the zone migration."
+        },
+        {
+          "message_id": "msg-096",
+          "thread_id": "thread-014",
+          "user": "Vikram",
+          "timestamp": "2026-08-10T14:10:00Z",
+          "text": "Confirmed. The SPF TXT record was truncated during migration. Provider is rejecting all emails due to SPF fail."
+        },
+        {
+          "message_id": "msg-097",
+          "thread_id": "thread-014",
+          "user": "Deepak",
+          "timestamp": "2026-08-10T14:15:00Z",
+          "text": "Restoring the correct SPF record in Route53. TTL is 300 seconds so should propagate quickly."
+        },
+        {
+          "message_id": "msg-098",
+          "thread_id": "thread-014",
+          "user": "Vikram",
+          "timestamp": "2026-08-10T14:25:00Z",
+          "text": "SPF record propagated. Email provider confirming deliveries are going through again. Backlog being processed."
+        },
+        {
+          "message_id": "msg-099",
+          "thread_id": "thread-014",
+          "user": "Deepak",
+          "timestamp": "2026-08-10T14:30:00Z",
+          "text": "Resolved. Root cause: DNS configuration issue - SPF TXT record was corrupted during zone migration causing email provider to reject all outgoing emails. Fixed by restoring correct SPF record."
+        },
+        {
+          "message_id": "msg-100",
+          "thread_id": "thread-015",
+          "user": "Kavita",
+          "timestamp": "2026-08-11T07:00:00Z",
+          "text": "Loan Service is returning HTTP 500 on new loan application submissions. Existing loans unaffected."
+        },
+        {
+          "message_id": "msg-101",
+          "thread_id": "thread-015",
+          "user": "Sanjay",
+          "timestamp": "2026-08-11T07:03:00Z",
+          "text": "Error trace shows NullPointerException in the loan eligibility calculator. Stack trace points to the new credit tier logic."
+        },
+        {
+          "message_id": "msg-102",
+          "thread_id": "thread-015",
+          "user": "Kavita",
+          "timestamp": "2026-08-11T07:06:00Z",
+          "text": "The new deployment added a credit_tier field that's required by the calculator but the database migration hasn't run yet. Field is NULL for all records."
+        },
+        {
+          "message_id": "msg-103",
+          "thread_id": "thread-015",
+          "user": "Sanjay",
+          "timestamp": "2026-08-11T07:10:00Z",
+          "text": "Classic deployment ordering issue. Code was deployed before the migration. Running migration now with default value of 'STANDARD'."
+        },
+        {
+          "message_id": "msg-104",
+          "thread_id": "thread-015",
+          "user": "Kavita",
+          "timestamp": "2026-08-11T07:15:00Z",
+          "text": "Migration complete. All existing records now have credit_tier = 'STANDARD'. New submissions working."
+        },
+        {
+          "message_id": "msg-105",
+          "thread_id": "thread-015",
+          "user": "Sanjay",
+          "timestamp": "2026-08-11T07:20:00Z",
+          "text": "Resolved. Root cause: Deployment configuration issue - application code deployed before database migration. New required field was NULL causing NullPointerException. Fixed by running migration."
+        }
+      ]
+    }
+  ]
+}
