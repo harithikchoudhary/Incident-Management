@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Management Platform - API Documentation</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
+    <style>
+        html {
+            box-sizing: border-box;
+            overflow: -moz-scrollbars-vertical;
+            overflow-y: scroll;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+    <script>
+        // Fallback to CDN if primary fails
+        if (typeof SwaggerUIBundle === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"><\/script>');
+            document.write('<script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js"><\/script>');
+        }
+    </script>
+    <script>
+        window.onload = function() {
+            try {
+                const ui = SwaggerUIBundle({
+                    url: "/openapi.json",
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                        SwaggerUIStandalonePreset
+                    ],
+                    plugins: [
+                        SwaggerUIBundle.plugins.DownloadUrl
+                    ],
+                    layout: "StandaloneLayout"
+                });
+                window.ui = ui;
+            } catch (error) {
+                document.getElementById('swagger-ui').innerHTML = `
+                    <div style="padding: 40px; font-family: Arial, sans-serif;">
+                        <h1>⚠️ Unable to Load Swagger UI</h1>
+                        <p>The Swagger UI JavaScript files could not be loaded from the CDN.</p>
+                        <p><strong>Alternative: View Raw OpenAPI Spec</strong></p>
+                        <p>Click here to view the raw API specification: <a href="/openapi.json">OpenAPI JSON</a></p>
+                        <p><strong>Solution:</strong> Install Swagger UI locally or use a tool like Postman to import the OpenAPI spec.</p>
+                        <hr>
+                        <h3>Available Endpoints:</h3>
+                        <ul>
+                            <li>GET /api/health - Health check</li>
+                            <li>GET /api/dashboard - Dashboard statistics</li>
+                            <li>GET /api/incidents - List all incidents</li>
+                            <li>GET /api/incidents/search - Search incidents</li>
+                            <li>GET /api/incidents/{id} - Get specific incident</li>
+                            <li>GET /api/incidents/{id}/conversation - Get incident conversation</li>
+                            <li>POST /api/incidents/analyze - Analyze new incident</li>
+                            <li>POST /api/incidents/chat - Chat about incidents</li>
+                            <li>POST /api/ingestion/mock-chat - Ingest mock chat data</li>
+                        </ul>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

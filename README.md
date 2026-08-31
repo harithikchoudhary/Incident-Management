@@ -65,7 +65,7 @@ AWS_REGION=us-east-1
 AWS_BEDROCK_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
 AWS_BEDROCK_EMBEDDING_MODEL_ID=amazon.titan-embed-text-v1
 FAISS_INDEX_PATH=./data/faiss_index
-MOCK_CHAT_PATH=./data/mock_google_chat.json
+MOCK_CHAT_PATH=./data/original_incident_data.json
 ```
 
 ### Database Setup
@@ -92,7 +92,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```bash
 cd frontend
 pip install -r requirements.txt
-streamlit run app.py
+streamlit run frontend\app.py --server.port 8501
 ```
 
 ## How to Ingest Mock Data
@@ -221,3 +221,34 @@ To integrate Google Chat:
 - Incident timeline visualization
 - Auto-generated runbooks
 - Integration with PagerDuty/OpsGenie
+
+
+
+
+
+1. User clicks "Ingest Mock Chat Data" in frontend
+   ↓
+2. POST /api/ingestion/mock-chat
+   ↓
+3. MockChatSource reads mock_google_chat.json
+   ↓
+4. Groups messages by thread_id → ChatThread objects
+   ↓
+5. For each thread:
+   - IncidentExtractor.extract(thread) → uses LLM to parse
+   - Creates Incident object
+   ↓
+6. IncidentService.create_incident(incident):
+   - Saves to SQLite: repository.save(incident)
+   - Creates embedding: retrieval_service.index_incident(incident)
+     → Embeds text → Adds to FAISS index
+   ↓
+7. Returns success/failure counts
+
+
+
+
+
+
+
+

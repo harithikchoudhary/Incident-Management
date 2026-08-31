@@ -3,13 +3,13 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    database_url: str = "sqlite:///./data/incidents.db"
+    database_url: str = "postgresql://postgres:root@localhost:5432/incident_management"
     openai_api_key: str = ""
     openai_base_url: str = "https://bedrock-mantle.us-east-1.api.aws/v1"
     openai_project_id: str = "default"
     openai_model: str = "openai.gpt-oss-120b"
     faiss_index_path: str = "./data/faiss_index"
-    mock_chat_path: str = "./data/mock_google_chat.json"
+    mock_chat_path: str = "./data/original_incident_data.json"
     log_level: str = "INFO"
     embedding_dimension: int = 384
 

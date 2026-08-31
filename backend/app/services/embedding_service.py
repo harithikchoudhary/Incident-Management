@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 import faiss
+from sentence_transformers import SentenceTransformer
 from app.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
@@ -21,8 +22,28 @@ class EmbeddingService(ABC):
         pass
 
 
+class SentenceTransformerEmbeddingService(EmbeddingService):
+    """Sentence-transformers based embedding using all-MiniLM-L6-v2 model."""
+
+    def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
+        logger.info(f"Loading sentence-transformer model: {model_name}")
+        self.model = SentenceTransformer(model_name)
+        self.dimension = get_settings().embedding_dimension
+        logger.info(f"Model loaded. Embedding dimension: {self.dimension}")
+
+    def embed(self, text: str) -> List[float]:
+        """Generate embedding for a single text."""
+        embedding = self.model.encode(text, convert_to_numpy=True)
+        return embedding.tolist()
+
+    def embed_batch(self, texts: List[str]) -> List[List[float]]:
+        """Generate embeddings for multiple texts (batch processing)."""
+        embeddings = self.model.encode(texts, convert_to_numpy=True, batch_size=32)
+        return embeddings.tolist()
+
+
 class SimpleEmbeddingService(EmbeddingService):
-    """Hash-based embedding for local use without external API."""
+    """Hash-based embedding for local use without external API (fallback)."""
 
     def __init__(self):
         self.dimension = get_settings().embedding_dimension
@@ -100,19 +121,21 @@ class FAISSIndex:
         return incident_id in self.id_map
 
 
-def get_embedding_service() -> EmbeddingService:
-    return SimpleEmbeddingService()
-
-
 # Singleton instances
 _embedding_service: Optional[EmbeddingService] = None
 _faiss_index: Optional[FAISSIndex] = None
 
 
 def get_embedding_service_instance() -> EmbeddingService:
+    """Get or create the global embedding service instance."""
     global _embedding_service
     if _embedding_service is None:
-        _embedding_service = get_embedding_service()
+        try:
+            _embedding_service = SentenceTransformerEmbeddingService()
+            logger.info("Using SentenceTransformer embedding service (all-MiniLM-L6-v2)")
+        except Exception as e:
+            logger.warning(f"Failed to load SentenceTransformer, falling back to SimpleEmbedding: {e}")
+            _embedding_service = SimpleEmbeddingService()
     return _embedding_service
 
 

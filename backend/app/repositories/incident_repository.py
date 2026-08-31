@@ -1,7 +1,7 @@
 import logging
 from typing import List, Optional
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 
 from app.config.settings import get_settings
@@ -13,7 +13,20 @@ logger = logging.getLogger(__name__)
 class IncidentRepository:
     def __init__(self):
         settings = get_settings()
-        self.engine = create_engine(settings.database_url)
+        # Create engine with schema support for PostgreSQL
+        engine_kwargs = {}
+        if settings.database_url.startswith('postgresql'):
+            engine_kwargs['connect_args'] = {'options': '-csearch_path=incident,public'}
+        self.engine = create_engine(settings.database_url, **engine_kwargs)
+        
+        # Create schema if using PostgreSQL
+        if settings.database_url.startswith('postgresql'):
+            with self.engine.connect() as conn:
+                conn.execute(text("CREATE SCHEMA IF NOT EXISTS incident"))
+                conn.commit()
+        
+        # Create all tables in the incident schema
+        Base.metadata.schema = 'incident' if settings.database_url.startswith('postgresql') else None
         Base.metadata.create_all(self.engine)
         self.SessionLocal = sessionmaker(bind=self.engine)
 

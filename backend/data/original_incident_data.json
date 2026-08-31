@@ -1,0 +1,810 @@
+[
+  {
+  "incident_id": "3028742",
+  "initial_thread": {
+    "original_message": {
+      "timestamp": "6:44 AM",
+      "author": "Rutuja Gaikwad",
+      "text": "@IT Major Incident, ML users are unable to login APK and Portal"
+    },
+    "replies": [
+      {
+        "timestamp": "6:46 AM",
+        "author": "IT Major Incident",
+        "text": "Noted. Kindly share details mentioned below, What is the issue? Which LOB is impacted? What time was it identified? Any upstream/downstream App or Infra affected? Count of impacted/logged-in users? Count of stuck / failed cases? Business revenue impacted?"
+      },
+      {
+        "timestamp": "6:48 AM",
+        "author": "IT Major Incident",
+        "text": "meet.google.com/jfh-jhcu-dqg\n@Rutuja Gaikwad Pls join the call"
+      },
+      {
+        "timestamp": "6:52 AM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev3 ticket # 3028742 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "6:55 AM",
+        "author": "IT Major Incident",
+        "text": "Alert start time 06:15 AM\nP-26086928\n5 services-Multiple service problems\nP-26086930\nlocalhost:443-Merc_Web_DR-4xx Count Increased--MERC DR",
+        "edited": true
+      },
+      {
+        "timestamp": "6:59 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per App support team, ML users are unable to login APK and Portal, App support team has perform the pool, recycle and IIS reset however the issue still persist.\n2. We have engaged, Application DC and Infra Middleware team on call and further investigation is ongoing"
+      },
+      {
+        "timestamp": "7:05 AM",
+        "author": "IT Major Incident",
+        "text": "Both APK and Portal is not working, based on the impact upgrading the severity to S1"
+      },
+      {
+        "timestamp": "7:11 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: ML users are unable to login APK and Portal\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: Yes\nIncident Reported by: App Support team (Rutuja G)\n\nCurrent update:\n1. As suggested from Application team (Rajesh K) application team has stop the ISS services and Infra Middleware team has removing the server from the LB. Further investigation is ongoing\n\nIncident ID: 3028742\nSeverity Level: S1\nIncident Status: Open"
+      },
+      {
+        "timestamp": "7:11 AM",
+        "author": "Pankaj Gawade",
+        "text": "Issue escalated to CTO sir via messages"
+      },
+      {
+        "timestamp": "7:30 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: ML users are unable to login APK and Portal\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: Yes\nIncident Reported by: App Support team (Rutuja G)\n\nCurrent update:\n1. As recommended by the application team (Rajesh K) the DC Team has restarted all the App Server\n2. The App Support team is verifying whether any queued or process pile-ups on the server. Further investigation is ongoing\n\nIncident ID: \nSeverity Level: S1\nIncident Status: Work in Progress"
+      },
+      {
+        "timestamp": "7:48 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: ML users are unable to login APK and Portal\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: Yes\nIncident Reported by: App Support team (Rutuja G)\n\nCurrent update:\n1. As per Infra Middleware team, all the application server are still out of the LB, however according to application team, request have started processing successfully. The team is investigating how request are being coming while the servers remain out of the LB.\n2. As per App Support team, the APK is now working fine and the Ops portal has been validated the app support team same has been confirmed from user end issue is resolved.\n\nIncident ID: 3028742\nSeverity Level: S1\nIncident Status: Resolved"
+      },
+      {
+        "timestamp": "7:54 AM",
+        "author": "MOD_ Operations",
+        "text": "requests going to the given servers"
+      },
+      {
+        "timestamp": "8:09 AM",
+        "author": "IT Major Incident",
+        "text": ""
+      },
+      {
+        "timestamp": "8:14 AM",
+        "author": "Shreejith Unnithan",
+        "text": "Case notified to CDO sir"
+      },
+      {
+        "timestamp": "10:20 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: ML users are unable to login APK and Portal\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: Yes\nIncident Reported by: App Support team (Rutuja G)\n\nCurrent update:\n1. As per Infra Middleware team, the App server were initiated to removed from the LB servers during the issue time however due to some technical issue the sever did not got removed from the LB, all the request were passing from LB.\n2. App Support team has confirmed no issue from user end. We will keep this under observation. Bridge call is closed.\n\nIncident ID: 3028742\nSeverity Level: S1\nIncident Status: Resolved"
+      },
+      {
+        "timestamp": "12:16 PM",
+        "author": "Sandesh Chauhan",
+        "text": "Hi IM Team Please reopen the Bridge as ops team having portal login issue"
+      },
+      {
+        "timestamp": "12:17 PM",
+        "author": "IT Major Incident",
+        "text": "meet.google.com/jfh-jhcu-dqg"
+      }
+    ]
+  },
+
+  "reopened_thread": {
+    "reopened_at": "12:16 PM",
+    "reopened_by": "Sandesh Chauhan",
+    "original_message": {
+      "timestamp": "12:16 PM",
+      "author": "Sandesh Chauhan",
+      "text": "Hi IM Team Please reopen the Bridge as ops team having portal login issue"
+    },
+    "meeting_link": "https://meet.google.com/jfh-jhcu-dqg",
+    "replies": [
+      {
+        "timestamp": "12:29 PM",
+        "author": "Nitin Thorat",
+        "text": "1. As per the App support team, Ops users are intermittently experiencing timeout errors within the OPS journey. (Approx 22 users)\n2. Currently no issues reported for field users."
+      },
+      {
+        "timestamp": "12:31 PM",
+        "author": "IT Major Incident",
+        "text": "A sev3 ticket 3029526 has been raised to track this issue"
+      },
+      {
+        "timestamp": "12:35 PM",
+        "author": "Nitin Thorat",
+        "text": "1. As per the application support team, the IP-based Ops URL is working correctly and is accessible to users within the LTF domain. However, the majority of Ops users are from the vendor side and currently do not have access to this IP-based URL.\n2. Middleware team joined and investigating further"
+      },
+      {
+        "timestamp": "12:45 PM",
+        "author": "IT Major Incident",
+        "text": "3. The App Support team has been requested to log in to the Ops URL and perform validation.\n4. The Infra Middleware team is reviewing and validating the logs."
+      },
+      {
+        "timestamp": "1:06 PM",
+        "author": "IT Major Incident",
+        "text": "5. As Per Application team (Smrutiranjan) suggestion, the DC team has restarted the Ops servers (172.20.83.23 and 172.20.84.23)\n6. App Support team and Infra Middleware team is further validating."
+      },
+      {
+        "timestamp": "1:13 PM",
+        "author": "IT Major Incident",
+        "text": "7. App Support team is able to login to Ops portal, the same was checked from few Ops users and its working fine.\n8. Further App support team is validating from all other Ops users."
+      },
+      {
+        "timestamp": "1:23 PM",
+        "author": "IT Major Incident",
+        "text": "App Support team has received a confirmation from Ops users, the issue is resolved. Bridge call is closed."
+      }
+    ]
+  },
+
+  "related_incidents": [
+    {
+      "incident_id": "3029526",
+      "severity": "Sev3",
+      "description": "Ops users were intermittently experiencing timeout errors within the OPS journey.",
+      "impacted_users": "Approximately 22 users",
+      "status": "Resolved"
+    }
+  ]
+},
+
+{
+  "incident_id": "P-26086993",
+  "thread": {
+    "original_message": {
+      "timestamp": "12:21 PM",
+      "author": "L1_appmonitoring",
+      "edited": true,
+      "text": "HI Incident team\nFYI,\nDear IM Team Problem P-26086993\nDMS_App_Prod_172.30.83.142:\nDMS - Memory usage\nWe connect with multiple teams & @Yogesh Chhatre but alert is still open since 4 hrs."
+    },
+    "replies": [
+      {
+        "timestamp": "1:42 PM",
+        "author": "Farhan Shaikh",
+        "text": "JAVA is utilizing more memory on the server and currently 5GB is free on the server.\n\n@Jayesh Gaikar @Mostafijur Rahaman Kindy check"
+      },
+      {
+        "timestamp": "1:45 PM",
+        "author": "IT Major Incident",
+        "text": "@Omkar Dere As discussed, please check"
+      },
+      {
+        "timestamp": "1:45 PM",
+        "author": "Omkar Dere",
+        "text": "adding @Akshat Sharma"
+      },
+      {
+        "timestamp": "1:53 PM",
+        "author": "L1_appmonitoring",
+        "text": "resolved."
+      },
+      {
+        "timestamp": "1:55 PM",
+        "author": "Farhan Shaikh",
+        "text": "Monitoring team still the load on the server is same, then how the alert is resolved?\nIf the alert is resolved now then why it was active from 4hours?"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3017297",
+  "thread": {
+    "original_message": {
+      "timestamp": "Yesterday 4:47 PM",
+      "author": "L1_appmonitoring",
+      "edited": true,
+      "text": "@IT Major Incident FYI,\nWe received multiple host or monitoring unavailable alerts Sandesh from windows team is already checking and 1 linux server is down if any further update we will let you know."
+    },
+    "replies": [
+      {
+        "timestamp": "Yesterday 4:48 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\n\nKindly share details mentioned below,\n\n- What is the issue?\n- Which LOB is impacted?\n- What time was it identified?\n- Any upstream/downstream App or Infra affected?\n- Count of impacted/logged-in users?\n- Count of stuck / failed cases?\n- Business revenue impacted?\n\nmeet.google.com/dgx-rwsc-bem"
+      },
+      {
+        "timestamp": "Yesterday 4:56 PM",
+        "author": "Sandesh Dalvi",
+        "text": "4ltpoa1pvmwesx13.lntfinsvcs.com"
+      },
+      {
+        "timestamp": "Yesterday 4:58 PM",
+        "author": "Nitin Thorat",
+        "text": "Tracking this issue under Sev3- 3017297"
+      },
+      {
+        "timestamp": "Yesterday 4:58 PM",
+        "author": "L1_appmonitoring",
+        "attachments": [
+          "Untitled spreadsheet.xlsx"
+        ],
+        "text": ""
+      },
+      {
+        "timestamp": "Yesterday 5:02 PM",
+        "author": "L1_appmonitoring",
+        "text": "ltpol1vrowapp01 - 10.3.24.174"
+      },
+      {
+        "timestamp": "Yesterday 5:18 PM",
+        "author": "Nikhil Bhagat",
+        "text": "Please inform here once the issue is resolved"
+      },
+      {
+        "timestamp": "Yesterday 5:19 PM",
+        "author": "IT Major Incident",
+        "text": "Noted"
+      },
+      {
+        "timestamp": "Yesterday 5:29 PM",
+        "author": "Prashant Pawar",
+        "edited": true,
+        "text": "@IT Major Incident AMS and RMC application impacted not able to login due this"
+      },
+      {
+        "timestamp": "Yesterday 5:37 PM",
+        "author": "IT Major Incident",
+        "text": "@Prashant Pawar kindly check now"
+      },
+      {
+        "timestamp": "Yesterday 5:38 PM",
+        "author": "Prashant Pawar",
+        "text": "We are able to login now AMS and RMC"
+      },
+      {
+        "timestamp": "Yesterday 5:48 PM",
+        "author": "IT Major Incident",
+        "text": "The issue has been resolved.",
+        "quoted_message": {
+          "original_author": "Nikhil Bhagat",
+          "original_text": "Please inform here once the issue is resolved"
+        }
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3027845",
+  "thread": {
+    "original_message": {
+      "timestamp": "Yesterday 3:26 PM",
+      "author": "EDW Batch Monitoring",
+      "text": "Hi Team\n\nplease raise an incident as per L2 Team, Kafta server node has showing disk full"
+    },
+    "replies": [
+      {
+        "timestamp": "Yesterday 3:26 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?"
+      },
+      {
+        "timestamp": "Yesterday 3:29 PM",
+        "author": "EDW Batch Monitoring",
+        "text": "What is the issue? 172.30.84.222 ( space issue is ( 99% full)\nWhich LOB is impacted? conectors will start failing and data loss will be there\nWhat time was it identified? 12 PM\nAny upstream/downstream App or Infra affected? Upstream\nCount of impacted/logged-in users? 0\nCount of stuck / failed cases? 0\nBusiness revenue impacted? No"
+      },
+      {
+        "timestamp": "Yesterday 3:30 PM",
+        "author": "IT Major Incident",
+        "text": "meet.google.com/dgx-rwsc-bem"
+      },
+      {
+        "timestamp": "Yesterday 3:31 PM",
+        "author": "L1_appmonitoring",
+        "text": "Alert start time 3:39 AM\nP-26086168\nAbInitio_App_Prod_172.30.84.222:\nLow disk space"
+      },
+      {
+        "timestamp": "Yesterday 3:34 PM",
+        "author": "IT Major Incident",
+        "text": "We have raised the Sev-3 ticket # 3027845 to track this issue."
+      },
+      {
+        "timestamp": "Yesterday 3:37 PM",
+        "author": "IT Major Incident",
+        "edited": true,
+        "text": ""
+      },
+      {
+        "timestamp": "Yesterday 3:41 PM",
+        "author": "Nitin Thorat",
+        "text": ""
+      },
+      {
+        "timestamp": "Yesterday 3:45 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per Prashant S. from the EDW team, the Kafka server node disk is almost full. The total storage capacity is 300 GB, with only 6.42 GB currently available.\n2. Currently EDW team has stopped connectors since morning 10:30 AM.\n3. The Monitoring team informed the EDW team regarding this alert today at 3:39 AM.\nFurther discussion is going on."
+      },
+      {
+        "timestamp": "Yesterday 3:54 PM",
+        "author": "IT Major Incident",
+        "text": "4. The EDW team (Prashant S) requires a resource increase of 100 GB disk space across all 5 nodes.\n5. We have engaged the Change team on the call and the EDW team is currently raising an RFC as guided by them."
+      },
+      {
+        "timestamp": "Yesterday 4:02 PM",
+        "author": "IT Major Incident",
+        "text": "6. RFC-16917 (Standard | ABinitio ( Kafka ) | Space increase) has been raised.\n7. The EDW team is currently working on obtaining the required approvals for the resource increase on the Kafka servers."
+      },
+      {
+        "timestamp": "Yesterday 4:28 PM",
+        "author": "IT Major Incident",
+        "text": "8. Approval received from Capacity team.\n9. Verbal approval has been received from Yogesh C (DC Team).\n10. The DC Team (Farhan S.) has initiated the resource upscale process to add 100 GB of memory to each of the following Kafka servers:\n172.30.84.220\n172.30.84.221\n172.30.84.222\n172.30.84.80\n172.30.84.81"
+      },
+      {
+        "timestamp": "Yesterday 4:41 PM",
+        "author": "IT Major Incident",
+        "text": "11. As per the DC team the upscale activity has been completed.\n12. As per Monitoring team disk space alert is now resolved.\n13. As per EDW team (Prashant S)., issue has been resolved now.\nThe bridge call is closed now."
+      },
+      {
+        "timestamp": "Yesterday 4:46 PM",
+        "author": "L1_appmonitoring",
+        "text": "Alert end time 4:35 PM"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3026695",
+  "thread": {
+    "original_message": {
+      "timestamp": "Yesterday 9:48 AM",
+      "author": "IT Major Incident",
+      "edited": true,
+      "text": "Rajesh K reported that High DB Session observed in ML"
+    },
+    "replies": [
+      {
+        "timestamp": "Yesterday 9:49 AM",
+        "author": "IT Major Incident",
+        "text": "@Rameshwar Sharma\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?\nhttps://meet.google.com/idx-vxgz-ezo"
+      },
+      {
+        "timestamp": "Yesterday 9:51 AM",
+        "author": "IT Major Incident",
+        "edited": true,
+        "text": "Rajesh k asked to join the above link\nWe have raised Sev3 ticket 3026695 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "Yesterday 10:02 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Application Team, a high DB session count has been observed in the ML application, with the current session count at approximately 500. The ops users had reported slowness issue. However, no business impact has been reported at this time from users.\n2. The Application Team has identified the need for modifications in the following SP:\n[Merc].[dbo].[Usp_submitapplicant]\nusp_submitloanapplication\n3. As per application team a Tag is ready for deployment. The Change Team has been engaged, and further discussion are in progress."
+      },
+      {
+        "timestamp": "Yesterday 10:04 AM",
+        "author": "IT Major Incident",
+        "text": "@Release & Deployment Team Kindly join the call"
+      },
+      {
+        "timestamp": "Yesterday 10:13 AM",
+        "author": "IT Major Incident",
+        "text": "4. The Change team has provided the go-ahead for the urgent bug fix involving modification of two stored procedures[Usp_submitapplicant] & [usp_submitloanapplication]\n5. Prior to deployment, the App Support team has stopped the Sourcing Revamp – New Journey services in the application pools across all servers.\n6. The Release team is proceeding with the deployment."
+      },
+      {
+        "timestamp": "Yesterday 10:41 AM",
+        "author": "IT Major Incident",
+        "text": "The Release team has successfully done the deployment.\n7. The App Support team has started the services in the application pools across all servers and current session count is 260.\n8. Further validation is in progress by App support team"
+      },
+      {
+        "timestamp": "Yesterday 10:59 AM",
+        "author": "IT Major Incident",
+        "text": "9. As per the DB team, the current database session count is 503.\n10. As per the DB team IRE1 applicant case-level STP is currently having the highest number of sessions however the session count is gradually reducing.\n11. CPU utilization is currently at 100% & Users are still facing issue\n12. As per Rajesh K will wait till 11:00 AM to observe if sessions are reducing"
+      },
+      {
+        "timestamp": "Yesterday 11:04 AM",
+        "author": "IT Major Incident",
+        "text": "Updated Score card as users facing login and slowness issue"
+      },
+      {
+        "timestamp": "Yesterday 11:07 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: NA\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. As suggested by Rajesh K, App support team stopped IIS pool.\n2. Further discussion going on.\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Open"
+      },
+      {
+        "timestamp": "Yesterday 11:11 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: NA\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. App support team has started the IIS pool.\n2. As per DB team there are no long running queries observed and current session count is 62\n3. Further validation is in progress\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Work in progress"
+      },
+      {
+        "timestamp": "Yesterday 11:35 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: NA\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. As per the DB team still current DB session count is 400+ & same IRE1 applicant case-level STP is having the high number of sessions\n2. As per App support team users still facing the issue\n3. Further discussion & investigation is ongoing\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Work in progress"
+      },
+      {
+        "timestamp": "Yesterday 11:43 AM",
+        "author": "Lavena Babu",
+        "text": ""
+      },
+      {
+        "timestamp": "Yesterday 11:51 AM",
+        "author": "Nitin Thorat",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: NA\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. The ML L1 team has received confirmation from users that the \"oh no\" and \"bad gateway\" errors have been resolved.\n2. Current session count is 378.\n3. further discussion going on.\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Open"
+      },
+      {
+        "timestamp": "Yesterday 12:11 PM",
+        "author": "Nitin Thorat",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: NA\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. The DB and application teams have confirmed that the session count is currently under control.\n2. The App Support team checked Ops portal and confirmed that the issue is resolved and the portal is functioning correctly.\n3. The L1 team has validated with field users and confirmed that the issue is resolved.\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Resolved"
+      },
+      {
+        "timestamp": "Yesterday 12:30 PM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: NA\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. As per the APP support team, OPS portal URL is functioning as expected and issue has been resolved.\n2. We will keep this incident under observation.\nThe bridge call is closed now.\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Resolved"
+      },
+      {
+        "timestamp": "Yesterday 12:40 PM",
+        "author": "L1_appmonitoring",
+        "text": "Problem P-26086260\nLTFS:\nMerc DB Session count\nAlert start time: 8:34 AM\nAlert End Time: 10:24 AM"
+      },
+      {
+        "timestamp": "Yesterday 6:07 PM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: Users facing login and slowness issue in MERC\nBusiness Impact: Users won’t be able to complete the loan journey\nLOB: ML\nApplication/Infra: MERC\nWorkaround/ Redundancy Available: NA\nMonitoring Alerts: Yes\nIncident Reported by: Rajesh K\n\nCurrent update:\n1. No further issues have been reported during the observation period hence we are marking this incident as resolved\n2. Details of RCA will be shared by MERC Team\n\nIncident ID: 3026695\nSeverity Level: S3(P1)\nIncident Status: Resolved\nActual Start time: 11/08/2026 08:41\nIncident Reported time: 11/08/2026 09:48\nIncident Resolution time: 11/08/2026 12:11\nRCA owner: MERC team\nTicket Status: Resolved"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3026426",
+  "thread": {
+    "original_message": {
+      "timestamp": "Yesterday 1:00 AM",
+      "author": "EDW Batch Monitoring",
+      "text": "Hii Team,\npls raise the incident for AB inition portal is not working."
+    },
+    "replies": [
+      {
+        "timestamp": "Yesterday 1:03 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?"
+      },
+      {
+        "timestamp": "Yesterday 1:06 AM",
+        "author": "EDW Batch Monitoring",
+        "text": "Kindly share details mentioned below,\nWhat is the issue? Ab Inition Portal is not working\nWhich LOB is impacted? TA , TCS Load , EAD , Collection mart .\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?\nhttps://meet.google.com/mzg-dsia-aer"
+      },
+      {
+        "timestamp": "Yesterday 1:09 AM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev3 ticket 3026426 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "Yesterday 1:13 AM",
+        "author": "L1_appmonitoring",
+        "text": "P-26086111\nAbInitio_App_Prod_172.30.84.218:\nCPU saturation"
+      },
+      {
+        "timestamp": "Yesterday 1:20 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Batch Monitoring Team, the AB Initio Portal is inaccessible. As a result, A, TCS Load, EAD, and Collection Mart processes are impacted.\n2. As per the DC Team, the falcon-sensor-b service is consuming high CPU resources. The Tomcat services were restarted however, CPU utilization continues to increase and remains at a high level. Infosec team has been engaged on call and further investigation is in progress"
+      },
+      {
+        "timestamp": "Yesterday 1:42 AM",
+        "author": "IT Major Incident",
+        "text": "3. As per the DC Team, the KESL and Falcon services were consuming high CPU resources. The server is configured with 32 CPU cores and 78 GB of memory.\n4. The current session count is within the normal threshold. The Infra Middleware Team has restarted the Tomcat services again. Further validation is in progress"
+      },
+      {
+        "timestamp": "Yesterday 1:59 AM",
+        "author": "Prashant S",
+        "text": "Hello, Kartikey is this issue resolved or not"
+      },
+      {
+        "timestamp": "Yesterday 2:01 AM",
+        "author": "IT Major Incident",
+        "text": "Based on the recommendation from the EDW Team (Kartikey J) and approval from Manish G, the DC Team restarted application server 172.30.84.218. The server is up and running. Validation is in progress"
+      },
+      {
+        "timestamp": "Yesterday 2:04 AM",
+        "author": "Prashant S",
+        "text": "@Kartikey Jain & @Manideep Vanapalli please let me know once the issue resolved. And provide the RCA"
+      },
+      {
+        "timestamp": "Yesterday 2:32 AM",
+        "author": "Darshan Kambli",
+        "text": "Hi Team\nCurrent CPU is idea 84 %"
+      },
+      {
+        "timestamp": "Yesterday 2:36 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per Ajay M., they are currently facing authentication issues while logging in to the AB Initio application.\n2. The DC Team was engaged to validate the user account AbInitioADBindUserProd; however, they confirmed that the account is configured with a Never Expire password setting and no issues were identified.\n3. As per the Linux Team, CPU utilization is within the normal range, with approximately 84% idle CPU available.\n4. EDW team is checking the logs and investigation is ongoing"
+      },
+      {
+        "timestamp": "Yesterday 2:50 AM",
+        "author": "Darshan Kambli",
+        "text": "Current CPU 98.5 id now no load in server"
+      },
+      {
+        "timestamp": "Yesterday 2:54 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per Ajay M. and Kartikey J, they are now able to log in to the application successfully. However, the job status is not being displayed on the front-end portal currently\n2. The EDW Team is further investigating the issue."
+      },
+      {
+        "timestamp": "Yesterday 3:20 AM",
+        "author": "IT Major Incident",
+        "text": "As per Kartikey J, all services have been restarted however, the jobs are still stuck"
+      },
+      {
+        "timestamp": "Yesterday 3:29 AM",
+        "author": "Darshan Kambli",
+        "edited": true,
+        "text": "As per application team suggestion we have reboot server now\nThe server is up & Running now"
+      },
+      {
+        "timestamp": "Yesterday 3:35 AM",
+        "author": "IT Major Incident",
+        "text": "Issue again escalated to Manish G"
+      },
+      {
+        "timestamp": "Yesterday 3:47 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per Manish M, a database deadlock is being observed on the Data Lake patch server.\n2. The DB Team (Sagar N.) has joined the bridge call and further investigating is in progress."
+      },
+      {
+        "timestamp": "Yesterday 4:08 AM",
+        "author": "IT Major Incident",
+        "text": "3. As per the DB Team, one of the database queries (DELETE FROM OpExecutable WHERE ExecutableId IN ) was running continuously for the past three days. Following approval from Manish G, the DB Team has kill the query, as the long-running process was impacting other database queries and overall performance.\n4. As per Manish G., database deadlocks were being observed and require further investigation by the DB Team. After terminating the long-running query, the jobs have started processing successfully and are currently running."
+      },
+      {
+        "timestamp": "Yesterday 4:12 AM",
+        "author": "IT Major Incident",
+        "text": "The issue is resolved and bridge call is closed. @Sagar Nangare As discussed on call with Manish G, kindly update on the deadlock. @Kartikey Jain @Ajay Mehta Kindly update on the root cause"
+      },
+      {
+        "timestamp": "Yesterday 7:52 AM",
+        "author": "EDW Batch Monitoring",
+        "edited": true,
+        "text": "Hi\nTCS & TA LOAD COMPLETED collection mart Dependent job running. EAD Pending"
+      },
+      {
+        "timestamp": "Yesterday 7:53 AM",
+        "author": "IT Major Incident",
+        "text": "Ok. Noted. Keep us posted once completed"
+      },
+      {
+        "timestamp": "Yesterday 7:55 AM",
+        "author": "EDW Batch Monitoring",
+        "text": "Sure"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "P-26085940",
+  "thread": {
+    "original_message": {
+      "timestamp": "Yesterday 1:25 PM",
+      "author": "L1_appmonitoring",
+      "text": "Hi IM team, FYI...\nWe have received an alert in Goldloan, which has been open for more than 20 hrs. We have already connect with the @Purushottam Narayan Aru\\@Ravindra M and sent mail for this alert.\nP-26085940\nGoldLoan_Web_Prod_172.21.37.2:\nLow disk space"
+    },
+    "replies": [
+      {
+        "timestamp": "Yesterday 1:26 PM",
+        "author": "Pankaj Gawade",
+        "text": "Kindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?"
+      },
+      {
+        "timestamp": "Yesterday 1:27 PM",
+        "author": "Nitin Thorat",
+        "text": "@Purushottam Narayan Aru kindly share details"
+      },
+      {
+        "timestamp": "Yesterday 1:30 PM",
+        "author": "Nitin Thorat",
+        "text": "Video call link: https://meet.google.com/jfh-jhcu-dqg\n\n@Purushottam Narayan Aru @Rushikesh Tuptewar kindly join"
+      },
+      {
+        "timestamp": "Yesterday 1:42 PM",
+        "author": "Nitin Thorat",
+        "edited": true,
+        "text": "1. According to the application team, there is currently 28.5 GB available out of 199 GB on the D drive, which is used for log storage.\n2. There is currently no impact on the Gold Loan journey. The application team is working with the DC team internally to purge the logs and free up space.\n@Purushottam Narayan Aru keep us posted the progressive updates."
+      },
+      {
+        "timestamp": "Yesterday 3:15 PM",
+        "author": "Nitin Thorat",
+        "text": ""
+      },
+      {
+        "timestamp": "Yesterday 3:30 PM",
+        "author": "Purushottam Narayan Aru",
+        "text": "Hi Team, This is already resolved. As we have purge the unnecessary data from the respective server.",
+        "quoted_message": {
+          "original_author": "Nitin Thorat",
+          "original_text": "@Purushottam Narayan Aru keep us posted the progressive updates."
+        }
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3025160",
+  "thread": {
+    "original_message": {
+      "timestamp": "Mon 1:21 PM",
+      "author": "L1_appmonitoring",
+      "text": "Hi IM team,\nWe have received an alert in Samriddhi, which has been open for more than 3 days. We have already connect with the DB team, DC team, and the App team. FYI...\n\nP-26084342\nIELSamriddhiLoan_DB_Prod_172.30.86.200:\nIELSamriddhiLoan -- Memory usage"
+    },
+    "replies": [
+      {
+        "timestamp": "Mon 1:21 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?"
+      },
+      {
+        "timestamp": "Mon 1:24 PM",
+        "author": "IT Major Incident",
+        "text": "meet.google.com/jfh-jhcu-dqg"
+      },
+      {
+        "timestamp": "Mon 1:28 PM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev3 ticket 3025160 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "Mon 1:36 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Monitoring Team, an alert has been open for more than 3 days on Samriddhi IELSamriddhiLoan_DB_Prod (172.30.86.200).\n2. The server has a total memory of 16 GB, out of which 15 GB is currently utilized, resulting in high memory utilization.\n3. Currently there is no impact, The App Support Team and DB Team have been engaged and are currently investigating the issue."
+      },
+      {
+        "timestamp": "Mon 1:54 PM",
+        "author": "IT Major Incident",
+        "text": "4. As per the DB Team, the SQL processor threshold is currently set to 65%, while the thread holds alert is configured at 90%.\n5. The App support, Application and DB team are analyzing whether additional resources need to be allocated or if the thread hold alert should be increased from 90% to 95%.\nFurther discussions and analysis are currently in progress."
+      },
+      {
+        "timestamp": "Mon 2:10 PM",
+        "author": "IT Major Incident",
+        "text": ""
+      },
+      {
+        "timestamp": "Mon 2:33 PM",
+        "author": "IT Major Incident",
+        "text": "Discussions are ongoing between the Application, DB, and DC teams to identify resource consumption sources other than SQL."
+      },
+      {
+        "timestamp": "Mon 2:48 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per the DC Team, the server is currently configured with 8 CPU cores and 16 GB RAM.\n2. A change and Capacity team has been engaged on call and based on the recommendation from the Application Team (Rajesh K), the DC Team will increase the resources to 16 CPU cores and 64 GB RAM after business hours. Bridge call is closed for now"
+      },
+      {
+        "timestamp": "Mon 2:49 PM",
+        "author": "Prashant Nivilkar",
+        "text": "Kindly share RFC & downtime schedule time so we can process"
+      },
+      {
+        "timestamp": "Mon 2:51 PM",
+        "author": "IT Major Incident",
+        "text": "@Smrutiranjan Swain As discussed, Kindly share the RFC number along with the downtime. @Prashant Nivilkar Keep us posted once the resources is increased. @Rameshwar Sharma Kindly perform the application sanity post resources upgraded."
+      },
+      {
+        "timestamp": "Yesterday 12:54 AM",
+        "author": "Tausif Pechkar",
+        "text": "Resource upscale has been completed of 172.30.86.200 server as per the RFC-16879. Waiting for sanity confirmation."
+      },
+      {
+        "timestamp": "Yesterday 1:25 AM",
+        "author": "IT Major Incident",
+        "text": "Sanity has been performed by App support team (Rutuja G), application is working fine"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3024040",
+  "thread": {
+    "original_message": {
+      "timestamp": "Mon 6:42 AM",
+      "author": "Akash Vairal",
+      "text": "Hi IM team kindly raised incident cases stuck at dedupe due to mas dedupe Api getting failed"
+    },
+    "replies": [
+      {
+        "timestamp": "Mon 6:43 AM",
+        "author": "Pankaj Gawade",
+        "text": "Kindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?"
+      },
+      {
+        "timestamp": "Mon 6:44 AM",
+        "author": "Akash Vairal",
+        "text": "Kindly share details mentioned below,\nWhat is the issue? cases stuck at dedupe\nWhich LOB is impacted? 96\nWhat time was it identified? last 15 mins\nAny upstream/downstream App or Infra affected? yes\nCount of impacted/logged-in users? 96\nCount of stuck / failed cases? 96\nBusiness revenue impacted? yes"
+      },
+      {
+        "timestamp": "Mon 6:45 AM",
+        "author": "Pankaj Gawade",
+        "text": "https://meet.google.com/bny-innb-tsz"
+      },
+      {
+        "timestamp": "Mon 6:53 AM",
+        "author": "IT Major Incident",
+        "text": "Tracking this incident under Sev3 ticket 3024040"
+      },
+      {
+        "timestamp": "Mon 7:14 AM",
+        "author": "IT Major Incident",
+        "text": "1. The Posidex server was found to be in a hung state. Upon confirmation from the Application Team (Veer), the DC Team restarted the server.\n2. The L2 Allied Team performed a service restart on server 172.26.54.51.\nService Name: ndp.wcftion.szoda.tbtDkbcKn.PosidexCustomerDedupe.App.Prod\n3. The alert has been resolved, and cases are now processing successfully. The issue has been resolved, and the bridge call has been closed."
+      },
+      {
+        "timestamp": "Mon 7:22 AM",
+        "author": "IT Major Incident",
+        "text": "@Suraj Pattade @Pratik Patil Kindly investigate and update on the root cause"
+      }
+    ]
+  }
+},
+
+
+
+{
+  "incident_id": "3024040",
+  "thread": {
+    "original_message": {
+      "timestamp": "Mon 6:42 AM",
+      "author": "L1_appmonitoring",
+      "text": "Hi, IM team.\nWe have received a critical alert for\nP-26085681\n2 infrastructure components:\nMultiple infrastructure problems\nAs per the Linux team, the @Suraj Waghmare server is in a hung state. Once the approval is received, we will reboot the server.\nWe have tried to call, @Veer Singh Choudhary but no luck\n@FYI"
+    },
+    "replies": [
+      {
+        "timestamp": "Mon 6:42 AM",
+        "author": "Pankaj Gawade",
+        "text": "Kindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nAny upstream/downstream App or Infra affected?\nCount of impacted/logged-in users?\nCount of stuck / failed cases?\nBusiness revenue impacted?"
+      },
+      {
+        "timestamp": "Mon 6:44 AM",
+        "author": "IT Major Incident",
+        "edited": true,
+        "text": "https://meet.google.com/bny-innb-tsz"
+      },
+      {
+        "timestamp": "Mon 6:47 AM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev3 ticket 3024040 to track this issue"
+      },
+      {
+        "timestamp": "Mon 6:50 AM",
+        "author": "IT Major Incident",
+        "text": ""
+      },
+      {
+        "timestamp": "Mon 6:51 AM",
+        "author": "L1_appmonitoring",
+        "text": "@FYI\nA total of 4 alerts are open in CL Large"
+      },
+      {
+        "timestamp": "Mon 6:54 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Monitoring Team, the Posidex server is in a hung state.\n2. As per the App Support Team, cases are getting stuck at the dedupe stage due to failures in the MAS Dedupe API for PL applications.\n3. Post confirmation from the Application Team (Veer), the DC Team has restarted the server.\nThe L2 Allied Team is currently restarting the services.\nAs per Monitoring team, currently alert is cleared and App support team has confirmed cases are getting success and issue is resolved."
+      },
+      {
+        "timestamp": "Mon 6:56 AM",
+        "author": "L1_appmonitoring",
+        "text": "Alert resolved at : 06:48 AM"
+      },
+      {
+        "timestamp": "Mon 7:00 AM",
+        "author": "IT Major Incident",
+        "text": "Awaiting for Cloud support team to join the call to identify the root cause"
+      },
+      {
+        "timestamp": "Mon 7:16 AM",
+        "author": "IT Major Incident",
+        "text": "1. The L2 Allied Team performed a service restart on server 172.26.54.51.\nService Name: ndp.wcftion.szoda.tbtDkbcKn.PosidexCustomerDedupe.App.Prod\n2. The alert has been resolved, and cases are now processing successfully. The issue has been resolved. DC and Cloud Team to check offline on the root cause for the hung server. Bridge call is closed\n@Suraj Pattade @Pratik Patil Kindly investigate and update on the root cause"
+      },
+      {
+        "timestamp": "Mon 11:35 AM",
+        "author": "Suraj Pattade",
+        "text": "@ltfslinuxsupport@ltfs.com Kindly check"
+      }
+    ]
+  }
+}
+]

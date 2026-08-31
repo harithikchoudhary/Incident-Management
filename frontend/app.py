@@ -71,8 +71,7 @@ page = st.sidebar.radio("Navigation", [
     "\U0001f4ac Incident Chat",
     "\U0001f4ca Dashboard",
     "\U0001f4cb Historical Incidents",
-    "\U0001f50d Search Incidents",
-    "\U0001f4c4 Incident Details",
+    "\U0001f50d Search & Details",
     "\U00002b07\ufe0f Data Ingestion",
 ])
 
@@ -82,7 +81,7 @@ st.sidebar.caption("AI-Powered Incident Management Platform")
 # ============ CHAT INTERFACE ============
 if page == "\U0001f4ac Incident Chat":
     st.title("\U0001f4ac Incident Management Assistant")
-    st.caption("Report a new incident, ask about past incidents, or get resolution recommendations — all in one place.")
+    st.caption("Ask about past incidents, or get resolution recommendations — all in one place.")
 
     # Initialize chat history
     if "chat_messages" not in st.session_state:
@@ -92,9 +91,9 @@ if page == "\U0001f4ac Incident Chat":
     if not st.session_state.chat_messages:
         st.info(
             "**How to use:**\n"
-            "- **Report an incident:** _\"Payment API is returning HTTP 500 errors. Logs show connection pool exhausted.\"_\n"
-            "- **Ask about past incidents:** _\"What incidents have we had with the Order Service?\"_\n"
-            "- **Get resolution help:** _\"How did we fix Kafka consumer lag issues before?\"_\n\n"
+            "- **Ask about past incidents:** _\"What happened when ML users could not log in to the MERC APK and Portal?\"_\n"
+            "- **Get resolution help:** _\"How was the Kafka server low-disk-space incident resolved?\"_\n"
+            "- **Investigate a failure:** _\"Why were cases stuck at dedupe when the MAS Dedupe API failed?\"_\n\n"
             "All answers are based **only** on ingested historical incident data."
         )
 
@@ -314,26 +313,152 @@ elif page == "📋 Historical Incidents":
     else:
         st.info("No incidents found. Go to **Data Ingestion** to load mock data.")
 
-# ============ SEARCH ============
-elif page == "🔍 Search Incidents":
-    st.title("🔍 Search Incidents")
+# ============ UNIFIED SEARCH & DETAILS ============
+elif page == "🔍 Search & Details":
+    st.title("🔍 Search & Details")
+    st.caption("Search by incident ID (e.g., INC-001) or by description/symptoms (e.g., database timeout, HTTP 500)")
 
+    # Initialize session state for current incident and conversation
+    if "current_incident_data" not in st.session_state:
+        st.session_state.current_incident_data = None
+    if "show_conversation" not in st.session_state:
+        st.session_state.show_conversation = False
+
+    # Search input
     search_col1, search_col2 = st.columns([3, 1])
     with search_col1:
-        query = st.text_input("Search query", placeholder="e.g., database connection pool exhaustion, HTTP 500, timeout")
+        query = st.text_input(
+            "Search by Incident ID or Description", 
+            placeholder="e.g., INC-001 OR database connection pool exhaustion, HTTP 500, timeout",
+            key="unified_search"
+        )
     with search_col2:
         app_filter = st.text_input("Application (optional)", placeholder="e.g., Payment API")
 
-    if st.button("🔎 Search", type="primary", key="search_btn"):
-        if query:
-            with st.spinner("Searching..."):
-                params = {"q": query}
-                if app_filter:
-                    params["application"] = app_filter
-                results = api_get("/api/incidents/search", params=params)
+    # Search/Load button
+    search_triggered = st.button("🔎 Search / Load", type="primary", key="unified_search_btn")
+
+    # Process search/load
+    if query and search_triggered:
+        # Reset conversation state on new search
+        st.session_state.show_conversation = False
+        
+        # Check if input looks like an incident ID (e.g., INC-001, INC001, etc.)
+        is_incident_id = query.strip().upper().startswith("INC") or "-" in query[:10]
+        
+        if is_incident_id:
+            # Direct incident lookup
+            incident_id = query.strip()
+            with st.spinner(f"Loading incident {incident_id}..."):
+                data = api_get(f"/api/incidents/{incident_id}")
+            
+            if data:
+                # Store in session state
+                st.session_state.current_incident_data = data
+            else:
+                st.session_state.current_incident_data = None
+                st.warning(f"❌ Incident '{incident_id}' not found. Try searching by description instead.")
+        else:
+            # Clear current incident for semantic search
+            st.session_state.current_incident_data = None
+
+    # Add "New Search" button if incident is displayed
+    if st.session_state.current_incident_data:
+        if st.button("🔄 New Search", key="clear_incident"):
+            st.session_state.current_incident_data = None
+            st.session_state.show_conversation = False
+            st.rerun()
+
+    # Display incident details if available
+    if st.session_state.current_incident_data:
+        data = st.session_state.current_incident_data
+        
+        st.divider()
+        st.success(f"✅ Incident {data['incident_id']} found")
+        st.divider()
+
+        # Header
+        severity_icon = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(data["severity"], "⚪")
+        st.subheader(f"{severity_icon} {data['incident_id']} — {data['application']}")
+
+        # Metadata grid
+        meta_col1, meta_col2, meta_col3 = st.columns(3)
+        meta_col1.write(f"**Application:** {data['application']}")
+        meta_col2.write(f"**Environment:** {data['environment']}")
+        meta_col3.write(f"**Severity:** {data['severity']}")
+
+        meta_col4, meta_col5, meta_col6 = st.columns(3)
+        meta_col4.write(f"**Status:** {data['status']}")
+        meta_col5.write(f"**Created:** {data.get('created_at', 'N/A')}")
+        meta_col6.write(f"**Resolved:** {data.get('resolved_at', 'N/A')}")
+
+        st.divider()
+
+        # Problem
+        st.subheader("Problem")
+        st.write(data["problem_summary"])
+
+        # Symptoms
+        if data.get("symptoms"):
+            st.subheader("Symptoms")
+            for s in data["symptoms"]:
+                st.write(f"• {s}")
+
+        # Error Codes
+        if data.get("error_codes"):
+            st.subheader("Error Codes")
+            st.code(", ".join(data["error_codes"]))
+
+        # Root Cause
+        if data.get("root_cause"):
+            st.subheader("Root Cause")
+            st.info(data["root_cause"])
+
+        # Resolution
+        if data.get("resolution"):
+            st.subheader("Resolution Steps")
+            for i, step in enumerate(data["resolution"], 1):
+                st.write(f"**{i}.** {step}")
+
+        # Source Conversation
+        st.divider()
+        st.subheader("💬 Original Google Chat Conversation")
+        
+        # Button to toggle conversation display
+        if st.button("📜 Load Source Conversation", key="load_conv"):
+            st.session_state.show_conversation = True
+            st.rerun()
+        
+        # Display conversation if toggled
+        if st.session_state.show_conversation:
+            incident_id = data['incident_id']
+            conv_data = api_get(f"/api/incidents/{incident_id}/conversation")
+            if conv_data and conv_data.get("conversation"):
+                with st.container():
+                    st.markdown("---")
+                    lines = conv_data["conversation"].split("\n")
+                    for line in lines:
+                        if line.strip():
+                            if "]:" in line:
+                                parts = line.split("]:", 1)
+                                st.markdown(f"**{parts[0]}]:** {parts[1]}")
+                            else:
+                                st.text(line)
+            elif conv_data:
+                st.info("No conversation data available for this incident.")
+            else:
+                st.warning("Could not load conversation.")
+    
+    # Semantic search - only when not viewing a specific incident
+    elif query and search_triggered:
+        with st.spinner("Searching..."):
+            params = {"q": query}
+            if app_filter:
+                params["application"] = app_filter
+            results = api_get("/api/incidents/search", params=params)
 
             if results and results.get("results"):
-                st.success(f"Found {results['total']} matching incident(s)")
+                st.success(f"✅ Found {results['total']} matching incident(s)")
                 st.divider()
 
                 for r in results["results"]:
@@ -343,109 +468,57 @@ elif page == "🔍 Search Incidents":
 
                     severity_icon = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(inc["severity"], "⚪")
 
-                    with st.expander(f"{severity_icon} {inc['incident_id']} | {inc['application']} | Score: {score_pct}% | {inc['problem_summary'][:60]}"):
+                    # Show full details in expander
+                    with st.expander(
+                        f"{severity_icon} {inc['incident_id']} | {inc['application']} | Match: {score_pct}% | {inc['problem_summary'][:60]}...",
+                        expanded=(results['total'] == 1)  # Auto-expand if only one result
+                    ):
                         st.progress(score, text=f"Relevance: {score_pct}%")
+                        
+                        # Metadata
+                        meta_col1, meta_col2, meta_col3 = st.columns(3)
+                        meta_col1.write(f"**Environment:** {inc['environment']}")
+                        meta_col2.write(f"**Severity:** {inc['severity']}")
+                        meta_col3.write(f"**Status:** {inc['status']}")
+                        
+                        st.divider()
+                        
+                        # Problem
                         st.write(f"**Problem:** {inc['problem_summary']}")
+                        
+                        # Symptoms
+                        if inc.get("symptoms"):
+                            st.write("**Symptoms:**")
+                            for s in inc["symptoms"]:
+                                st.write(f"  • {s}")
+                        
+                        # Error Codes
+                        if inc.get("error_codes"):
+                            st.write(f"**Error Codes:** `{'`, `'.join(inc['error_codes'])}`")
+                        
+                        # Root Cause
                         if inc.get("root_cause"):
                             st.write(f"**Root Cause:** {inc['root_cause']}")
+                        
+                        # Resolution
                         if inc.get("resolution"):
-                            st.write("**Resolution:**")
-                            for step in inc["resolution"]:
-                                st.write(f"  ✅ {step}")
+                            st.write("**Resolution Steps:**")
+                            for i, step in enumerate(inc["resolution"], 1):
+                                st.write(f"  {i}. {step}")
+                        
+                        # View full details button
+                        st.divider()
+                        if st.button(f"📜 View Full Details", key=f"view_{inc['incident_id']}"):
+                            st.session_state.current_incident_data = inc
+                            st.session_state.show_conversation = False
+                            st.rerun()
+                            
             elif results:
-                st.warning("No matching incidents found.")
-        else:
-            st.warning("Please enter a search query.")
+                st.warning("No matching incidents found. Try different search terms.")
+    
+    elif search_triggered:
+        st.warning("Please enter a search query or incident ID.")
 
-# ============ INCIDENT DETAILS ============
-elif page == "\U0001f4c4 Incident Details":
-    st.title("📄 Incident Details")
-
-    # Allow selecting from existing incidents or typing an ID
-    col_input, col_load = st.columns([3, 1])
-    with col_input:
-        incident_id = st.text_input("Enter Incident ID", placeholder="e.g., INC-001")
-    with col_load:
-        st.write("")
-        st.write("")
-        load_btn = st.button("📥 Load Incident", type="primary")
-
-    # Also show a dropdown of available incidents
-    all_data = api_get("/api/incidents")
-    if all_data and all_data.get("incidents"):
-        options = [""] + [f"{i['incident_id']} - {i['application']}" for i in all_data["incidents"]]
-        selected = st.selectbox("Or select from existing incidents:", options, key="select_incident")
-        if selected:
-            incident_id = selected.split(" - ")[0]
-
-    if incident_id and (load_btn or selected):
-        data = api_get(f"/api/incidents/{incident_id}")
-        if data:
-            st.divider()
-
-            # Header
-            severity_icon = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}.get(data["severity"], "⚪")
-            st.subheader(f"{severity_icon} {data['incident_id']} — {data['application']}")
-
-            # Metadata grid
-            meta_col1, meta_col2, meta_col3 = st.columns(3)
-            meta_col1.write(f"**Application:** {data['application']}")
-            meta_col2.write(f"**Environment:** {data['environment']}")
-            meta_col3.write(f"**Severity:** {data['severity']}")
-
-            meta_col4, meta_col5, meta_col6 = st.columns(3)
-            meta_col4.write(f"**Status:** {data['status']}")
-            meta_col5.write(f"**Created:** {data.get('created_at', 'N/A')}")
-            meta_col6.write(f"**Resolved:** {data.get('resolved_at', 'N/A')}")
-
-            st.divider()
-
-            # Problem
-            st.subheader("Problem")
-            st.write(data["problem_summary"])
-
-            # Symptoms
-            if data.get("symptoms"):
-                st.subheader("Symptoms")
-                for s in data["symptoms"]:
-                    st.write(f"• {s}")
-
-            # Error Codes
-            if data.get("error_codes"):
-                st.subheader("Error Codes")
-                st.code(", ".join(data["error_codes"]))
-
-            # Root Cause
-            if data.get("root_cause"):
-                st.subheader("Root Cause")
-                st.info(data["root_cause"])
-
-            # Resolution
-            if data.get("resolution"):
-                st.subheader("Resolution Steps")
-                for i, step in enumerate(data["resolution"], 1):
-                    st.write(f"**{i}.** {step}")
-
-            # Source Conversation
-            st.divider()
-            st.subheader("💬 Original Google Chat Conversation")
-            if st.button("📜 Load Source Conversation", key="load_conv"):
-                conv_data = api_get(f"/api/incidents/{incident_id}/conversation")
-                if conv_data and conv_data.get("conversation"):
-                    lines = conv_data["conversation"].split("\n")
-                    for line in lines:
-                        if line.strip():
-                            if "]:" in line:
-                                parts = line.split("]:", 1)
-                                st.markdown(f"**{parts[0]}]:** {parts[1]}")
-                            else:
-                                st.text(line)
-                elif conv_data:
-                    st.info("No conversation data available for this incident.")
-                else:
-                    st.warning("Could not load conversation.")
-        else:
-            st.warning(f"Incident '{incident_id}' not found.")
 
 # ============ DATA INGESTION ============
 elif page == "⬇️ Data Ingestion":
@@ -464,7 +537,7 @@ elif page == "⬇️ Data Ingestion":
     st.subheader("Ingest Mock Google Chat Data")
     st.write("""
     This will:
-    1. Load conversations from `data/mock_google_chat.json`
+    1. Load conversations from `data/original_incident_data.json`
     2. Group messages by thread
     3. Extract structured incidents using AI
     4. Store incidents in the knowledge base
