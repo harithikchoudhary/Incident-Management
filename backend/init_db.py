@@ -30,7 +30,7 @@ def init_database():
             host="localhost",
             port=5432,
             user="postgres",
-            password="root",
+            password="postgres",
             database="postgres"
         )
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)

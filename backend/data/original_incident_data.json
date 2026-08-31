@@ -806,5 +806,533 @@
       }
     ]
   }
+},
+
+
+{
+  "incident_id": "3030115",
+  "thread": {
+    "original_message": {
+      "timestamp": "9:15 AM",
+      "author": "Rahul Sharma",
+      "text": "@IT Major Incident Payment gateway timeout errors reported by multiple customers. UPI and Net Banking transactions are failing."
+    },
+    "replies": [
+      {
+        "timestamp": "9:16 AM",
+        "author": "IT Major Incident",
+        "text": "Noted. Kindly share details mentioned below, What is the issue? Which LOB is impacted? What time was it identified? Any upstream/downstream App or Infra affected? Count of impacted/logged-in users? Count of stuck / failed cases? Business revenue impacted?"
+      },
+      {
+        "timestamp": "9:18 AM",
+        "author": "Rahul Sharma",
+        "text": "What is the issue? Payment gateway returning timeout errors for UPI and Net Banking\nWhich LOB is impacted? Retail Banking, Personal Loans\nWhat time was it identified? 9:05 AM\nAny upstream/downstream App or Infra affected? Yes, downstream payment processor\nCount of impacted/logged-in users? Approximately 1500 users\nCount of stuck / failed cases? 320 failed transactions\nBusiness revenue impacted? Yes, estimated Rs 2.5 Cr"
+      },
+      {
+        "timestamp": "9:20 AM",
+        "author": "IT Major Incident",
+        "text": "meet.google.com/abc-defg-hij\nSeverity upgraded to S1 based on revenue impact. Ticket # 3030115 raised."
+      },
+      {
+        "timestamp": "9:35 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Application Team, the payment gateway middleware is experiencing connection pool exhaustion.\n2. The DB Team confirmed that the payment database has 850+ active sessions, which is above the threshold of 500.\n3. The Infra Team has identified that the connection pooling service on server 172.30.90.45 is not releasing stale connections."
+      },
+      {
+        "timestamp": "9:50 AM",
+        "author": "IT Major Incident",
+        "text": "4. As per the DB Team, a long-running query on the payment_transactions table has been identified running for 6 hours.\n5. Following approval from Vikram S (Application Head), the DB Team has terminated the long-running query.\n6. The Infra Team has restarted the connection pooling service and current active sessions have dropped to 180."
+      },
+      {
+        "timestamp": "10:05 AM",
+        "author": "IT Major Incident",
+        "text": "7. App Support team confirmed UPI transactions are now processing successfully.\n8. Net Banking transactions validated by L1 team - confirmed working.\n9. Failed transaction queue is being reprocessed automatically.\n\nIncident ID: 3030115\nSeverity Level: S1\nIncident Status: Resolved"
+      },
+      {
+        "timestamp": "10:30 AM",
+        "author": "IT Major Incident",
+        "text": "Issue Statement: Payment gateway timeout errors for UPI and Net Banking\nBusiness Impact: Rs 2.5 Cr revenue impact, 1500+ users affected\nLOB: Retail Banking, Personal Loans\nApplication/Infra: Payment Gateway Middleware\nRoot Cause: Long-running query causing connection pool exhaustion\nResolution: Terminated long-running query and restarted connection pooling service\n\nIncident ID: 3030115\nSeverity Level: S1\nIncident Status: Resolved\nActual Start time: 14/08/2026 09:05\nIncident Resolution time: 14/08/2026 10:05\nRCA owner: Payment Gateway Team"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3031200",
+  "thread": {
+    "original_message": {
+      "timestamp": "2:30 AM",
+      "author": "L1_appmonitoring",
+      "text": "Hi IM team, Critical alert received.\nP-26087500\nCRM_App_Prod_172.30.85.100:\nCRM Application - HTTP 503 Service Unavailable\nAll CRM services are down. Customer-facing portal is inaccessible."
+    },
+    "replies": [
+      {
+        "timestamp": "2:31 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nmeet.google.com/xyz-abcd-efg"
+      },
+      {
+        "timestamp": "2:34 AM",
+        "author": "L1_appmonitoring",
+        "text": "What is the issue? CRM application returning 503 errors, all services down\nWhich LOB is impacted? All LOBs - ML, PL, GL, HF\nWhat time was it identified? 2:15 AM\nAny upstream/downstream App or Infra affected? Yes, downstream ticket management and customer portal\nCount of impacted/logged-in users? Night shift - approximately 200 agents\nCount of stuck / failed cases? All new tickets queuing up\nBusiness revenue impacted? Indirect - customer complaints cannot be logged"
+      },
+      {
+        "timestamp": "2:36 AM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev2 ticket # 3031200 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "2:45 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the DC Team, the CRM application server 172.30.85.100 has exhausted its heap memory. JVM heap is at 98% utilization.\n2. The application logs show repeated OutOfMemoryError exceptions in the CRM ticket creation module.\n3. The Infra Middleware Team is preparing to restart the Tomcat services."
+      },
+      {
+        "timestamp": "3:00 AM",
+        "author": "IT Major Incident",
+        "text": "4. As per the Infra Middleware Team, Tomcat services on both CRM servers (172.30.85.100 and 172.30.85.101) have been restarted.\n5. JVM heap memory configuration has been increased from 4GB to 8GB as recommended by Application Team (Deepak M).\n6. L1 team is validating CRM portal access."
+      },
+      {
+        "timestamp": "3:15 AM",
+        "author": "IT Major Incident",
+        "text": "7. CRM portal is now accessible and agents are able to log in and create tickets.\n8. Queued customer complaints are being processed.\n9. Application Team identified a memory leak in the recent CRM v3.2.1 deployment - ticket creation module not releasing database cursor objects.\n\nIncident ID: 3031200\nSeverity Level: S2\nIncident Status: Resolved\nRCA: Memory leak in CRM v3.2.1 ticket creation module"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3032450",
+  "thread": {
+    "original_message": {
+      "timestamp": "11:30 AM",
+      "author": "Priya Nair",
+      "text": "@IT Major Incident SSL certificate expiry alert on production load balancer. HTTPS connections to mobile banking app are failing with certificate errors."
+    },
+    "replies": [
+      {
+        "timestamp": "11:31 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nmeet.google.com/ssl-cert-xyz"
+      },
+      {
+        "timestamp": "11:33 AM",
+        "author": "Priya Nair",
+        "text": "What is the issue? SSL certificate expired on production LB for mobile banking\nWhich LOB is impacted? Mobile Banking - all LOBs\nWhat time was it identified? 11:20 AM - users started reporting\nCount of impacted users? All mobile app users - estimated 50,000+\nBusiness revenue impacted? Yes - no mobile transactions possible"
+      },
+      {
+        "timestamp": "11:35 AM",
+        "author": "IT Major Incident",
+        "text": "Severity escalated to S1. Ticket # 3032450 raised.\nIssue escalated to CTO and CISO immediately."
+      },
+      {
+        "timestamp": "11:40 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Network Team, the SSL certificate on the F5 load balancer (LB-PROD-01) expired at 11:00 AM today.\n2. The certificate renewal was scheduled for next week but was not processed in advance.\n3. The InfoSec Team has been engaged and is preparing the renewed certificate for immediate deployment."
+      },
+      {
+        "timestamp": "11:55 AM",
+        "author": "IT Major Incident",
+        "text": "4. InfoSec Team has generated and validated the new SSL certificate.\n5. The Network Team has deployed the certificate on LB-PROD-01 and LB-PROD-02.\n6. SSL handshake tests are passing successfully from multiple endpoints."
+      },
+      {
+        "timestamp": "12:05 PM",
+        "author": "IT Major Incident",
+        "text": "7. Mobile Banking app validated by L1 team - HTTPS connections working correctly.\n8. App Support team confirmed no further certificate errors from user end.\n9. Monitoring Team confirmed SSL alert is now cleared.\n\nIncident ID: 3032450\nSeverity Level: S1\nIncident Status: Resolved\nRoot Cause: SSL certificate expiry on production load balancer - renewal process not triggered on time\nResolution: New SSL certificate deployed on both production load balancers\nActual Start time: 15/08/2026 11:00\nIncident Resolution time: 15/08/2026 12:05"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3033780",
+  "thread": {
+    "original_message": {
+      "timestamp": "4:15 PM",
+      "author": "EDW Batch Monitoring",
+      "text": "Hi Team\nETL batch jobs failing with ORA-01555 snapshot too old error. Data warehouse nightly load is blocked."
+    },
+    "replies": [
+      {
+        "timestamp": "4:16 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nWhat time was it identified?\nmeet.google.com/etl-batch-001"
+      },
+      {
+        "timestamp": "4:18 PM",
+        "author": "EDW Batch Monitoring",
+        "text": "What is the issue? ETL jobs failing with ORA-01555, undo tablespace full\nWhich LOB is impacted? All LOBs - MIS reporting delayed\nWhat time was it identified? 3:45 PM\nBusiness revenue impacted? No direct revenue impact but regulatory reports will be delayed"
+      },
+      {
+        "timestamp": "4:20 PM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev3 ticket # 3033780 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "4:35 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per the DBA Team, the UNDO tablespace on the data warehouse Oracle instance has reached 99% utilization.\n2. A large DELETE operation on the transaction_staging table (45 million rows) consumed the entire undo space.\n3. The DBA Team is adding additional UNDO datafile to expand the tablespace."
+      },
+      {
+        "timestamp": "4:55 PM",
+        "author": "IT Major Incident",
+        "text": "4. DBA Team has added 50GB additional UNDO datafile. Current utilization is now at 62%.\n5. The failed ETL jobs have been restarted by the EDW Team.\n6. Batch monitoring confirmed jobs are now executing successfully."
+      },
+      {
+        "timestamp": "5:20 PM",
+        "author": "IT Major Incident",
+        "text": "7. All critical ETL jobs completed successfully.\n8. DBA Team will implement UNDO retention auto-tuning to prevent recurrence.\n9. Bridge call closed.\n\nIncident ID: 3033780\nSeverity Level: S3\nIncident Status: Resolved\nRoot Cause: UNDO tablespace exhaustion due to large DELETE operation"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3034560",
+  "thread": {
+    "original_message": {
+      "timestamp": "8:00 AM",
+      "author": "Amit Kulkarni",
+      "text": "@IT Major Incident Email notification service completely down. No loan approval/rejection emails being sent to customers since last night."
+    },
+    "replies": [
+      {
+        "timestamp": "8:02 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nKindly share details mentioned below,\nWhat is the issue?\nWhich LOB is impacted?\nmeet.google.com/email-svc-001"
+      },
+      {
+        "timestamp": "8:05 AM",
+        "author": "Amit Kulkarni",
+        "text": "What is the issue? Email notification microservice is down, SMTP relay not responding\nWhich LOB is impacted? All LOBs - ML, PL, GL, HF\nWhat time was it identified? 8:00 AM, but emails stopped going out since 11 PM last night\nCount of stuck cases? Approximately 12,000 emails queued\nBusiness revenue impacted? Customer communication SLA breach"
+      },
+      {
+        "timestamp": "8:07 AM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev2 ticket # 3034560. Impact is significant - 9 hours of email backlog."
+      },
+      {
+        "timestamp": "8:20 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Infra Team, the SMTP relay server 172.30.88.10 ran out of disk space on /var/spool/mail partition.\n2. The email queue has grown to 12,000+ messages causing the mail transfer agent (Postfix) to stop accepting new messages.\n3. The DC Team is cleaning up old log files and bounce messages to free space."
+      },
+      {
+        "timestamp": "8:40 AM",
+        "author": "IT Major Incident",
+        "text": "4. DC Team has freed 45GB of disk space by purging old logs and bounce messages older than 30 days.\n5. Postfix service restarted and email queue processing has resumed.\n6. Application Team confirmed notification microservice health check is now passing."
+      },
+      {
+        "timestamp": "9:15 AM",
+        "author": "IT Major Incident",
+        "text": "7. Email queue has been fully drained - all 12,000+ pending emails delivered.\n8. App Support team validated by checking recent loan approval emails - delivery confirmed.\n9. Monitoring alert for SMTP relay cleared.\n\nIncident ID: 3034560\nSeverity Level: S2\nIncident Status: Resolved\nRoot Cause: SMTP relay server disk space exhaustion on /var/spool/mail\nResolution: Purged old logs, restarted Postfix, queue drained\nActual Start time: 16/08/2026 23:00\nIncident Resolution time: 17/08/2026 09:15"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3035890",
+  "thread": {
+    "original_message": {
+      "timestamp": "10:45 AM",
+      "author": "L1_appmonitoring",
+      "text": "Hi IM team, Critical alert.\nP-26088200\nLOS_App_Prod_172.30.91.50:\nLoan Origination System - Response time exceeded 30 seconds\nMultiple users reporting extreme slowness in loan processing portal."
+    },
+    "replies": [
+      {
+        "timestamp": "10:46 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/los-perf-001\nKindly share details."
+      },
+      {
+        "timestamp": "10:48 AM",
+        "author": "L1_appmonitoring",
+        "text": "What is the issue? LOS portal response time degraded to 30-45 seconds per page load\nWhich LOB is impacted? ML, PL - new loan applications\nWhat time was it identified? 10:30 AM\nCount of impacted users? 800+ concurrent users\nBusiness revenue impacted? Yes - loan disbursements delayed"
+      },
+      {
+        "timestamp": "10:50 AM",
+        "author": "IT Major Incident",
+        "text": "Severity raised to S1 due to business impact. Ticket # 3035890 raised."
+      },
+      {
+        "timestamp": "11:00 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Application Team, the LOS portal is experiencing severe performance degradation.\n2. The DB Team identified that a missing index on the loan_applications table is causing full table scans on every search query.\n3. A recent deployment on Friday added a new search feature without the corresponding database index.\n4. Current DB CPU utilization is at 95% due to full table scans."
+      },
+      {
+        "timestamp": "11:15 AM",
+        "author": "IT Major Incident",
+        "text": "5. Following approval from Rajesh K, the DBA Team has created the missing composite index on loan_applications(application_date, status, applicant_id).\n6. Index creation completed successfully. DB CPU utilization dropped to 35%.\n7. LOS portal response time is now back to normal (under 2 seconds)."
+      },
+      {
+        "timestamp": "11:25 AM",
+        "author": "IT Major Incident",
+        "text": "8. App Support team confirmed portal is functioning normally.\n9. L1 team validated with field users - loan processing working as expected.\n10. Backlog of pending applications is being processed.\n\nIncident ID: 3035890\nSeverity Level: S1\nIncident Status: Resolved\nRoot Cause: Missing database index on loan_applications table after recent deployment\nResolution: Created composite index, DB CPU normalized\nActual Start time: 18/08/2026 10:30\nIncident Resolution time: 18/08/2026 11:25"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3036200",
+  "thread": {
+    "original_message": {
+      "timestamp": "3:00 PM",
+      "author": "Suresh Patil",
+      "text": "@IT Major Incident Redis cache cluster node failure. Session management affected - users being randomly logged out across all applications."
+    },
+    "replies": [
+      {
+        "timestamp": "3:02 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/redis-cache-001\nKindly share details."
+      },
+      {
+        "timestamp": "3:05 PM",
+        "author": "Suresh Patil",
+        "text": "What is the issue? Redis master node crashed, failover to replica incomplete\nWhich LOB is impacted? All LOBs using SSO - ML, PL, GL, CRM, OPS Portal\nWhat time was it identified? 2:50 PM\nCount of impacted users? All logged-in users - approximately 3000\nBusiness revenue impacted? Yes - all operations halted temporarily"
+      },
+      {
+        "timestamp": "3:07 PM",
+        "author": "IT Major Incident",
+        "text": "Severity S1 raised. Ticket # 3036200. CTO notified immediately."
+      },
+      {
+        "timestamp": "3:15 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Infra Team, the Redis master node (172.30.92.10) crashed due to an out-of-memory condition.\n2. Redis Sentinel attempted automatic failover but failed because the replica node (172.30.92.11) was 45 minutes behind in replication.\n3. Current Redis memory was configured at 8GB but actual usage reached 12GB due to session data growth."
+      },
+      {
+        "timestamp": "3:30 PM",
+        "author": "IT Major Incident",
+        "text": "4. The Infra Team manually promoted the replica node (172.30.92.11) as the new master.\n5. Application configuration updated to point to the new master.\n6. Redis maxmemory increased to 16GB with eviction policy set to allkeys-lru."
+      },
+      {
+        "timestamp": "3:45 PM",
+        "author": "IT Major Incident",
+        "text": "7. SSO sessions restored - users can log in again across all applications.\n8. The crashed node (172.30.92.10) has been recovered and configured as the new replica.\n9. Replication is in sync. Sentinel monitoring confirmed healthy.\n\nIncident ID: 3036200\nSeverity Level: S1\nIncident Status: Resolved\nRoot Cause: Redis master OOM crash, Sentinel failover failed due to replication lag\nResolution: Manual failover, memory limit increased, eviction policy configured\nActual Start time: 19/08/2026 14:50\nIncident Resolution time: 19/08/2026 15:45"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3037100",
+  "thread": {
+    "original_message": {
+      "timestamp": "5:30 AM",
+      "author": "EDW Batch Monitoring",
+      "text": "Hi Team\nKafka consumer lag exceeded 500,000 messages on the loan-events topic. Real-time data pipeline is significantly delayed."
+    },
+    "replies": [
+      {
+        "timestamp": "5:32 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/kafka-lag-001\nKindly share details."
+      },
+      {
+        "timestamp": "5:35 AM",
+        "author": "EDW Batch Monitoring",
+        "text": "What is the issue? Kafka consumer group loan-processor has lag of 500K+ messages\nWhich LOB is impacted? ML, PL - real-time reporting and notifications\nWhat time was it identified? 5:00 AM via monitoring alert\nBusiness revenue impacted? No direct impact but real-time dashboards showing stale data"
+      },
+      {
+        "timestamp": "5:37 AM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev3 ticket # 3037100 while impact analysis is in progress"
+      },
+      {
+        "timestamp": "5:50 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the EDW Team, the Kafka consumer application on server 172.30.84.230 was stuck in a rebalancing loop after one of the consumer instances crashed at 2:00 AM.\n2. The crashed consumer instance was running on a container that was OOM-killed by Kubernetes.\n3. The remaining consumers could not pick up the orphaned partitions due to a misconfigured session.timeout.ms (set too low at 10 seconds)."
+      },
+      {
+        "timestamp": "6:10 AM",
+        "author": "IT Major Incident",
+        "text": "4. The EDW Team has restarted the crashed consumer pod with increased memory limits (from 2GB to 4GB).\n5. Consumer session.timeout.ms updated to 45 seconds to prevent premature rebalancing.\n6. All consumer instances are now healthy and processing the backlog."
+      },
+      {
+        "timestamp": "7:00 AM",
+        "author": "IT Major Incident",
+        "text": "7. Consumer lag reduced to zero. All 500K+ messages processed successfully.\n8. Real-time dashboards showing current data.\n9. Monitoring alerts cleared.\n\nIncident ID: 3037100\nSeverity Level: S3\nIncident Status: Resolved\nRoot Cause: Kafka consumer OOM crash with misconfigured session timeout causing rebalancing loop\nResolution: Increased consumer memory, fixed session timeout configuration"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3038400",
+  "thread": {
+    "original_message": {
+      "timestamp": "1:00 PM",
+      "author": "Vikram Desai",
+      "text": "@IT Major Incident API Gateway rate limiting triggered incorrectly. Legitimate partner API requests being rejected with 429 Too Many Requests."
+    },
+    "replies": [
+      {
+        "timestamp": "1:02 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/apigw-rate-001\nKindly share details."
+      },
+      {
+        "timestamp": "1:05 PM",
+        "author": "Vikram Desai",
+        "text": "What is the issue? API Gateway wrongly rate-limiting partner integrations\nWhich LOB is impacted? Partner integrations - 5 fintech partners\nWhat time was it identified? 12:45 PM\nCount of impacted? 5 partner organizations, approximately 200 API calls/minute being rejected\nBusiness revenue impacted? Yes - partner loan origination flow disrupted"
+      },
+      {
+        "timestamp": "1:07 PM",
+        "author": "IT Major Incident",
+        "text": "We have raised Sev2 ticket # 3038400"
+      },
+      {
+        "timestamp": "1:20 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per the API Platform Team, a configuration change was deployed at 12:30 PM that inadvertently reduced the rate limit from 1000 req/min to 100 req/min for partner tier API keys.\n2. The change was part of a scheduled update to add a new rate limiting tier for internal services.\n3. The incorrect configuration was identified in the Kong gateway admin portal."
+      },
+      {
+        "timestamp": "1:35 PM",
+        "author": "IT Major Incident",
+        "text": "4. The API Platform Team has reverted the rate limiting configuration to the previous values.\n5. Partner tier rate limit restored to 1000 req/min.\n6. All 5 partner integrations confirmed working - no more 429 errors."
+      },
+      {
+        "timestamp": "1:45 PM",
+        "author": "IT Major Incident",
+        "text": "7. Partner teams notified about the temporary disruption.\n8. API Platform Team will implement configuration validation checks before deployment.\n\nIncident ID: 3038400\nSeverity Level: S2\nIncident Status: Resolved\nRoot Cause: Incorrect rate limiting configuration deployed to API Gateway\nResolution: Configuration reverted to correct values"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3039750",
+  "thread": {
+    "original_message": {
+      "timestamp": "7:30 PM",
+      "author": "L1_appmonitoring",
+      "text": "Hi IM team, Critical alert received.\nP-26089100\nMongoDB_Prod_Cluster:\nMongoDB primary node unreachable\nDocument storage service returning connection refused errors."
+    },
+    "replies": [
+      {
+        "timestamp": "7:32 PM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/mongo-prod-001\nKindly share details."
+      },
+      {
+        "timestamp": "7:35 PM",
+        "author": "L1_appmonitoring",
+        "text": "What is the issue? MongoDB primary node 172.30.93.10 unreachable, replica set election in progress\nWhich LOB is impacted? Document management - all LOBs\nWhat time was it identified? 7:25 PM\nCount of impacted users? All users uploading/viewing documents - approx 500 evening shift users\nBusiness revenue impacted? Document verification for loan processing halted"
+      },
+      {
+        "timestamp": "7:37 PM",
+        "author": "IT Major Incident",
+        "text": "Severity S2 raised. Ticket # 3039750."
+      },
+      {
+        "timestamp": "7:45 PM",
+        "author": "IT Major Incident",
+        "text": "1. As per the DBA Team, the MongoDB primary node crashed due to a corrupted WiredTiger journal file.\n2. Replica set election could not complete because one of the secondary nodes (172.30.93.12) was also in recovering state with stale oplog.\n3. Only one healthy secondary node (172.30.93.11) available but needs majority votes for election."
+      },
+      {
+        "timestamp": "8:00 PM",
+        "author": "IT Major Incident",
+        "text": "4. DBA Team has forced a reconfiguration of the replica set with the healthy secondary (172.30.93.11) as the new primary.\n5. The recovering secondary (172.30.93.12) has been removed from the replica set temporarily.\n6. Document service application reconnected to the new primary."
+      },
+      {
+        "timestamp": "8:15 PM",
+        "author": "IT Major Incident",
+        "text": "7. Document upload and viewing functionality restored and validated by App Support team.\n8. The crashed primary node (172.30.93.10) is being recovered - WiredTiger repair in progress.\n9. DBA Team will add the recovered nodes back to the replica set overnight.\n\nIncident ID: 3039750\nSeverity Level: S2\nIncident Status: Resolved\nRoot Cause: MongoDB primary crash due to corrupted WiredTiger journal\nResolution: Forced replica set reconfiguration with healthy secondary as new primary"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3040100",
+  "thread": {
+    "original_message": {
+      "timestamp": "9:00 AM",
+      "author": "Sneha Reddy",
+      "text": "@IT Major Incident Elasticsearch cluster health RED. Search functionality across all applications returning errors. Kibana dashboards not loading."
+    },
+    "replies": [
+      {
+        "timestamp": "9:02 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/es-cluster-001\nKindly share details."
+      },
+      {
+        "timestamp": "9:05 AM",
+        "author": "Sneha Reddy",
+        "text": "What is the issue? Elasticsearch cluster in RED state, 2 out of 5 data nodes offline\nWhich LOB is impacted? All LOBs - search and analytics\nWhat time was it identified? 8:45 AM\nCount of impacted users? All internal users relying on search - approx 2000\nBusiness revenue impacted? Indirect - incident search, log analysis, and audit trails unavailable"
+      },
+      {
+        "timestamp": "9:07 AM",
+        "author": "IT Major Incident",
+        "text": "Severity S2 raised. Ticket # 3040100."
+      },
+      {
+        "timestamp": "9:20 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Platform Team, two Elasticsearch data nodes (es-data-03, es-data-04) went offline due to JVM heap pressure causing repeated GC pauses.\n2. Both nodes had JVM heap configured at 16GB but were handling disproportionate shard allocation.\n3. 45 unassigned shards detected across the cluster causing RED status."
+      },
+      {
+        "timestamp": "9:40 AM",
+        "author": "IT Major Incident",
+        "text": "4. Platform Team restarted both offline data nodes with increased JVM heap (32GB).\n5. Shard rebalancing initiated - cluster status moved from RED to YELLOW.\n6. ILM policies adjusted to better distribute shards across all 5 data nodes."
+      },
+      {
+        "timestamp": "10:00 AM",
+        "author": "IT Major Incident",
+        "text": "7. All shards allocated and replicated. Cluster status is now GREEN.\n8. Search functionality restored across all applications.\n9. Kibana dashboards loading correctly.\n\nIncident ID: 3040100\nSeverity Level: S2\nIncident Status: Resolved\nRoot Cause: Elasticsearch data node failures due to JVM heap exhaustion and unbalanced shard allocation\nResolution: Restarted nodes with increased heap, rebalanced shards"
+      }
+    ]
+  }
+},
+
+
+{
+  "incident_id": "3041300",
+  "thread": {
+    "original_message": {
+      "timestamp": "6:00 AM",
+      "author": "Ravi Kumar",
+      "text": "@IT Major Incident Active Directory authentication failing intermittently. Users unable to log in to Windows workstations and internal applications."
+    },
+    "replies": [
+      {
+        "timestamp": "6:02 AM",
+        "author": "IT Major Incident",
+        "text": "Noted\nmeet.google.com/ad-auth-001\nSeverity S1 raised immediately. Ticket # 3041300.\nKindly share details."
+      },
+      {
+        "timestamp": "6:05 AM",
+        "author": "Ravi Kumar",
+        "text": "What is the issue? AD authentication failures - LDAP queries timing out\nWhich LOB is impacted? All LOBs - enterprise-wide\nWhat time was it identified? 5:45 AM - early morning shift users reported\nCount of impacted users? Potentially all 5000+ employees\nBusiness revenue impacted? Yes - all operations blocked for affected users"
+      },
+      {
+        "timestamp": "6:15 AM",
+        "author": "IT Major Incident",
+        "text": "1. As per the Windows Server Team, one of the three Domain Controllers (DC-PROD-02) is not responding to LDAP queries.\n2. DNS resolution is intermittently failing because DC-PROD-02 also hosts a DNS role.\n3. The remaining two DCs are overloaded handling all authentication requests."
+      },
+      {
+        "timestamp": "6:30 AM",
+        "author": "IT Major Incident",
+        "text": "4. Windows Server Team identified that DC-PROD-02 had a corrupted NTDS.dit file after an unexpected power event.\n5. DC-PROD-02 has been taken offline and DNS role transferred to DC-PROD-03.\n6. Load on remaining DCs stabilized - authentication success rate back to 99%."
+      },
+      {
+        "timestamp": "6:45 AM",
+        "author": "IT Major Incident",
+        "text": "7. All users able to authenticate successfully.\n8. DC-PROD-02 will be rebuilt from backup during maintenance window.\n9. Windows Team will implement UPS monitoring alerts for all DCs.\n\nIncident ID: 3041300\nSeverity Level: S1\nIncident Status: Resolved\nRoot Cause: Domain Controller NTDS.dit corruption after power event\nResolution: Offline corrupted DC, transferred DNS role, remaining DCs handling load"
+      }
+    ]
+  }
 }
 ]

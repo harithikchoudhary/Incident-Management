@@ -22,6 +22,8 @@ class OpenAILLMService(LLMService):
             api_key=settings.openai_api_key,
             base_url=settings.openai_base_url,
             project=settings.openai_project_id,
+            timeout=settings.openai_timeout_seconds,
+            max_retries=settings.openai_max_retries,
         )
         self.model = settings.openai_model
 

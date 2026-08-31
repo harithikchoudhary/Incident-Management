@@ -13,6 +13,13 @@ class IncidentBase(BaseModel):
     root_cause: Optional[str] = None
     resolution: List[str] = []
     status: str = "RESOLVED"
+    lob: Optional[str] = None
+    issue: Optional[str] = None
+    identified_time: Optional[str] = None
+    upstream_downstream: Optional[str] = None
+    impacted_users: Optional[str] = None
+    failed_cases: Optional[str] = None
+    business_impact: Optional[str] = None
 
 
 class IncidentCreate(IncidentBase):

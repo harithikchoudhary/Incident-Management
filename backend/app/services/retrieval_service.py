@@ -117,6 +117,21 @@ class RetrievalService:
         self.faiss_index.add(incident.incident_id, embedding)
         self.faiss_index.save()
 
+    def index_incidents_batch(self, incidents: List[Incident]):
+        """Batch-embed incidents and persist the FAISS index once."""
+        if not incidents:
+            return
+        texts = [self._build_embedding_text(inc) for inc in incidents]
+        embeddings = self.embedding_service.embed_batch(texts)
+        for inc, embedding in zip(incidents, embeddings):
+            self.faiss_index.add(inc.incident_id, embedding)
+        self.faiss_index.save()
+
+    def clear_index(self):
+        """Empty the FAISS index and persist the cleared state."""
+        self.faiss_index.clear()
+        self.faiss_index.save()
+
     def _build_embedding_text(self, incident: Incident) -> str:
         parts = [
             f"Application: {incident.application}",
