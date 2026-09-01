@@ -269,24 +269,26 @@ export default function HistoricalPage() {
         </div>
       ) : (
         <div className="card overflow-hidden">
-          <table className="w-full border-collapse text-left">
-            <thead>
-              <tr className="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                <th className="px-4 py-3">Severity</th>
-                <th className="px-4 py-3">Incident ID</th>
-                <th className="px-4 py-3">Application</th>
-                <th className="px-4 py-3">LOB</th>
-                <th className="px-4 py-3">Problem Summary</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((inc) => (
-                <IncidentRow key={inc.incident_id} inc={inc} />
-              ))}
-            </tbody>
-          </table>
+          <div className="scroll-brand overflow-x-auto">
+            <table className="w-full min-w-[900px] border-collapse text-left">
+              <thead>
+                <tr className="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <th className="px-4 py-3">Severity</th>
+                  <th className="px-4 py-3">Incident ID</th>
+                  <th className="px-4 py-3">Application</th>
+                  <th className="px-4 py-3">LOB</th>
+                  <th className="px-4 py-3">Problem Summary</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((inc) => (
+                  <IncidentRow key={inc.incident_id} inc={inc} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

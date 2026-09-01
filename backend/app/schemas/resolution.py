@@ -2,13 +2,6 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class AnalyzeRequest(BaseModel):
-    description: str
-    application: Optional[str] = None
-    environment: Optional[str] = "PROD"
-    severity: Optional[str] = None
-
-
 class MatchedIncident(BaseModel):
     incident_id: str
     similarity: float
@@ -42,9 +35,11 @@ class IngestionResponse(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     conversation_history: List[dict] = []
+    session_id: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
     response: str
     analysis: Optional[ResolutionResponse] = None
     has_analysis: bool = False
+    session_id: Optional[str] = None

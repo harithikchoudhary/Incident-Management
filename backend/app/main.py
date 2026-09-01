@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api import incidents, ingestion
+from app.api import chat_history, incidents, ingestion
 from app.config.settings import get_settings
 
 logging.basicConfig(level=logging.INFO)
@@ -216,6 +216,7 @@ async def redoc_html():
 
 app.include_router(incidents.router)
 app.include_router(ingestion.router)
+app.include_router(chat_history.router)
 
 
 @app.get("/api/health")

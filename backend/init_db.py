@@ -75,14 +75,26 @@ def init_database():
         
         cursor.close()
         conn.close()
-        
+
+        # Explicitly create all application tables now (incidents, chat_sessions,
+        # chat_history_messages) instead of waiting for the first app startup.
+        try:
+            from app.repositories.incident_repository import get_incident_repository
+            from app.repositories.chat_history_repository import get_chat_history_repository
+
+            get_incident_repository()
+            get_chat_history_repository()
+            logger.info("✓ Tables 'incidents', 'chat_sessions', 'chat_history_messages' created successfully")
+        except Exception as e:
+            logger.warning(f"Could not pre-create application tables (they will be created on first app start instead): {e}")
+
         logger.info("\n✓ Database initialization completed successfully!")
         logger.info("\nNext steps:")
         logger.info("1. Run: pip install -r requirements.txt")
         logger.info("2. Copy .env.example to .env and configure as needed")
         logger.info("3. Run: uvicorn app.main:app --reload")
         logger.info("\nTables will be created automatically on first application start.")
-        
+
     except Exception as e:
         logger.error(f"✗ Error creating schema: {e}")
         raise

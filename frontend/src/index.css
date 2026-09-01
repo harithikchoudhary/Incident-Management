@@ -10,13 +10,13 @@
   }
 
   body {
-    @apply bg-slate-100 text-slate-800 antialiased;
+    @apply bg-ink-50 text-ink-800 antialiased;
   }
 }
 
 @layer components {
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-xl border border-ink-100 bg-white shadow-sm;
   }
 
   .btn {
@@ -24,36 +24,65 @@
   }
 
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700;
+    @apply btn bg-brand-400 text-ink-900 hover:bg-brand-500;
   }
 
   .btn-secondary {
-    @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+    @apply btn border border-ink-200 bg-white text-ink-700 hover:bg-ink-50;
   }
 
   .input {
-    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+    @apply w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-800 placeholder-ink-400 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
   }
 
   .label {
-    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500;
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-ink-400;
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - brand themed */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: theme("colors.ink.200") transparent;
+}
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: theme("colors.ink.200");
   border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: theme("colors.ink.300");
+  background-clip: padding-box;
+}
+
+/* Light neutral scrollbar for nav/panels on white surfaces */
+.scroll-light {
+  scrollbar-color: theme("colors.ink.200") transparent;
+}
+.scroll-light::-webkit-scrollbar-thumb {
+  background: theme("colors.ink.200");
+}
+.scroll-light::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.ink.300");
+}
+
+/* Brand-accented scrollbar for the primary chat panel */
+.scroll-brand {
+  scrollbar-color: theme("colors.brand.400") transparent;
+}
+.scroll-brand::-webkit-scrollbar-thumb {
+  background: theme("colors.brand.400");
+}
+.scroll-brand::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.brand.600");
 }
 
 /* Markdown content spacing inside chat bubbles */
@@ -94,7 +123,7 @@
   margin-bottom: 0;
 }
 .markdown code {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(253, 185, 19, 0.18);
   padding: 0.1rem 0.3rem;
   border-radius: 0.25rem;
   font-size: 0.85em;
@@ -123,7 +152,7 @@
   font-style: italic;
 }
 .markdown blockquote {
-  border-left: 3px solid #6366f1;
+  border-left: 3px solid #1a8bc7;
   padding-left: 0.75rem;
   margin: 0.5rem 0;
   color: #475569;
@@ -151,9 +180,9 @@
   font-weight: 600;
 }
 .markdown a {
-  color: #4f46e5;
+  color: #136fa1;
   text-decoration: underline;
 }
 .markdown a:hover {
-  color: #3730a3;
+  color: #0f577f;
 }

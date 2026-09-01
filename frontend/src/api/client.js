@@ -39,19 +39,22 @@ export const api = {
     if (environment) params.set("environment", environment);
     return request(`/api/incidents/search?${params.toString()}`);
   },
-  chat: (message, conversationHistory = []) =>
+  chat: (message, conversationHistory = [], sessionId = null) =>
     request("/api/incidents/chat", {
       method: "POST",
       body: JSON.stringify({
         message,
         conversation_history: conversationHistory,
+        session_id: sessionId,
       }),
     }),
-  analyze: (payload) =>
-    request("/api/incidents/analyze", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  listChatSessions: () => request("/api/chat/sessions"),
+  getChatSessionMessages: (sessionId) =>
+    request(`/api/chat/sessions/${encodeURIComponent(sessionId)}/messages`),
+  createChatSession: () =>
+    request("/api/chat/sessions", { method: "POST", body: JSON.stringify({}) }),
+  deleteChatSession: (sessionId) =>
+    request(`/api/chat/sessions/${encodeURIComponent(sessionId)}`, { method: "DELETE" }),
   runIngestion: () =>
     request("/api/ingestion/mock-chat", {
       method: "POST",

@@ -1,14 +1,12 @@
 import logging
-import re
-from collections import Counter
 from fastapi import APIRouter, HTTPException
 from typing import Optional
 
 from app.schemas.incident import IncidentResponse, IncidentListResponse
-from app.schemas.resolution import AnalyzeRequest, ResolutionResponse, ChatRequest, ChatResponse
+from app.schemas.resolution import ResolutionResponse, ChatRequest, ChatResponse
 from app.services.incident_service import get_incident_service
-from app.services.llm_service import get_llm_service
-from app.graph.incident_graph import get_incident_graph
+from app.services.chat_history_service import get_chat_history_service
+from app.graph.incident_graph import get_incident_chat_graph
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/incidents", tags=["incidents"])
@@ -67,205 +65,150 @@ def get_conversation(incident_id: str):
     return {"incident_id": incident_id, "conversation": conversation}
 
 
-@router.post("/analyze", response_model=ResolutionResponse)
-def analyze_incident(request: AnalyzeRequest):
-    try:
-        graph = get_incident_graph()
-        result = graph.invoke({
-            "description": request.description,
-            "application": request.application,
-            "environment": request.environment or "PROD",
-            "structured_incident": None,
-            "retrieved_incidents": None,
-            "evidence": None,
-            "recommendation": None,
-            "confidence": None,
-            "error": None,
-        })
-        recommendation = result.get("recommendation", {})
-        return ResolutionResponse(**recommendation)
-    except Exception as e:
-        logger.error(f"Incident analysis failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
-
-
-_GENERIC_TOKENS = {
-    "service", "services", "system", "application", "app", "portal", "server",
-    "prod", "production", "cluster", "platform", "middleware", "web", "api",
-    "all", "lob", "lobs", "the", "and", "for", "with", "impacted", "loan", "unknown",
-}
-
-
-def _significant_tokens(value: str) -> set:
-    """Meaningful lowercase tokens from an application/LOB value for matching."""
-    tokens = re.findall(r"[A-Za-z0-9]+", (value or "").lower())
-    return {t for t in tokens if len(t) >= 2 and t not in _GENERIC_TOKENS}
-
-
-def _gather_relevant_incidents(service, all_incidents, message: str, limit: int = 8):
-    """Find incidents relevant to a natural-language message using incident-ID,
-    application, LOB, and semantic matching. Returns a ranked, deduped list of
-    (incident, reason) tuples so answers stay grounded in ingested data."""
-    msg = (message or "").lower()
-
-    def word_in(token: str) -> bool:
-        return bool(token) and re.search(r"\b" + re.escape(token) + r"\b", msg) is not None
-
-    picked = {}
-
-    def add(inc, rank, reason):
-        if inc is None:
-            return
-        current = picked.get(inc.incident_id)
-        if current is None or rank < current[0]:
-            picked[inc.incident_id] = (rank, inc, reason)
-
-    for inc in all_incidents:
-        if word_in((inc.incident_id or "").lower()):
-            add(inc, 0, "incident ID match")
-    for inc in all_incidents:
-        if any(word_in(t) for t in _significant_tokens(inc.application)):
-            add(inc, 1, f"application match ({inc.application})")
-    for inc in all_incidents:
-        if inc.lob and any(word_in(t) for t in _significant_tokens(inc.lob)):
-            add(inc, 2, f"LOB match ({inc.lob})")
-    try:
-        for r in service.search_incidents(query=message):
-            add(r["incident"], 3, f"semantic match ({r['score']:.0%})")
-    except Exception as e:
-        logger.warning(f"Semantic search failed during chat retrieval: {e}")
-
-    ranked = sorted(picked.values(), key=lambda x: (x[0], x[1].incident_id))
-    return [(inc, reason) for _, inc, reason in ranked[:limit]]
-
-
 @router.post("/chat", response_model=ChatResponse)
 def chat_about_incident(request: ChatRequest):
     try:
-        llm = get_llm_service()
         service = get_incident_service()
+        history_service = get_chat_history_service()
+        session_id = history_service.ensure_session(request.session_id)
 
         all_incidents = service.get_all_incidents()
 
         if not all_incidents:
+            response_text = "No incidents have been ingested yet. Please go to Data Ingestion and load the mock chat data first."
+            history_service.record_turn(session_id, request.message, response_text)
             return ChatResponse(
-                response="No incidents have been ingested yet. Please go to Data Ingestion and load the mock chat data first.",
+                response=response_text,
                 has_analysis=False,
+                session_id=session_id,
             )
 
-        # Retrieve incidents relevant to the message (ID, application, LOB, semantic)
-        relevant = _gather_relevant_incidents(service, all_incidents, request.message)
+        chat_graph = get_incident_chat_graph()
+        result = chat_graph.invoke({
+            "message": request.message,
+            "conversation_history": request.conversation_history or [],
+            "query_analysis": None,
+            "retrieval_result": None,
+            "top_matches": None,
+            "sources": None,
+            "final_response": None,
+            "error": None,
+        })
 
-        # Build context ONLY from ingested incidents
-        retrieved_context = ""
-        if relevant:
-            retrieved_context = "RETRIEVED HISTORICAL INCIDENTS (from ingested data):\n\n"
-            for i, (inc, reason) in enumerate(relevant, 1):
-                retrieved_context += f"--- Incident {i} ({reason}) ---\n"
-                retrieved_context += f"ID: {inc.incident_id}\n"
-                retrieved_context += f"Application: {inc.application}\n"
-                retrieved_context += f"LOB: {inc.lob or 'Unspecified'}\n"
-                retrieved_context += f"Environment: {inc.environment}\n"
-                retrieved_context += f"Severity: {inc.severity}\n"
-                retrieved_context += f"Status: {inc.status}\n"
-                retrieved_context += f"Problem: {inc.problem_summary}\n"
-                if inc.issue:
-                    retrieved_context += f"Issue: {inc.issue}\n"
-                if inc.identified_time:
-                    retrieved_context += f"Identified at: {inc.identified_time}\n"
-                retrieved_context += f"Symptoms: {', '.join(inc.symptoms or [])}\n"
-                retrieved_context += f"Error Codes: {', '.join(inc.error_codes or [])}\n"
-                if inc.impacted_users:
-                    retrieved_context += f"Impacted users: {inc.impacted_users}\n"
-                if inc.failed_cases:
-                    retrieved_context += f"Stuck/failed cases: {inc.failed_cases}\n"
-                if inc.business_impact:
-                    retrieved_context += f"Business impact: {inc.business_impact}\n"
-                retrieved_context += f"Root Cause: {inc.root_cause or 'Unknown'}\n"
-                retrieved_context += f"Resolution: {'; '.join(inc.resolution or [])}\n\n"
+        response_text = (result.get("final_response") or "").strip()
+        if not response_text:
+            response_text = (
+                "I could not generate a grounded response right now. "
+                "Try querying by incident ID, application, LOB, symptom, or error code."
+            )
 
-        # Aggregate breakdowns so the assistant can answer statistical questions
-        def _fmt_counts(counter):
-            return ', '.join(f"{name} ({count})" for name, count in counter.most_common()) or "none"
-
-        lob_counts = Counter((i.lob or "Unspecified").strip() for i in all_incidents)
-        severity_counts = Counter((i.severity or "UNKNOWN") for i in all_incidents)
-        app_counts = Counter((i.application or "Unknown") for i in all_incidents)
-        status_counts = Counter((i.status or "UNKNOWN") for i in all_incidents)
-
-        stats_context = "\nINGESTED DATA SUMMARY (all incidents):\n"
-        stats_context += f"Total incidents: {len(all_incidents)}\n"
-        stats_context += f"By LOB (most to least): {_fmt_counts(lob_counts)}\n"
-        stats_context += f"By Severity: {_fmt_counts(severity_counts)}\n"
-        stats_context += f"By Application: {_fmt_counts(app_counts)}\n"
-        stats_context += f"By Status: {_fmt_counts(status_counts)}\n"
-
-        history_context = ""
-        if request.conversation_history:
-            recent = request.conversation_history[-6:]
-            history_context = "\nConversation history:\n"
-            for msg in recent:
-                role = msg.get("role", "user")
-                content = msg.get("content", "")
-                history_context += f"{role}: {content}\n"
-
-        # Check if this looks like a new incident report — run full analysis
-        is_incident = any(keyword in request.message.lower() for keyword in [
-            "500", "503", "error", "down", "failing", "timeout", "crash",
-            "connection pool", "memory", "cpu", "spike", "lag", "deadlock",
-            "certificate", "expired", "deployment", "dns", "redis", "kafka",
-        ])
-
-        prompt = f"""You are an AI incident management assistant for an internal incident knowledge base. Reply conversationally and helpfully, but ground EVERY factual statement in the ingested incident data below. Do NOT use outside or general knowledge. Do NOT invent incidents, IDs, root causes, numbers, or resolutions.
-
-You can help the user:
-- Look up a specific incident by ID
-- Find incidents by application, LOB, severity, or symptom
-- Explain what happened, the root cause, and how it was resolved (always citing incident IDs)
-- Answer statistical questions using the summary
-- Recommend resolution steps for a new problem based ONLY on similar past incidents
-
-{stats_context}
-{retrieved_context}
-{history_context}
-User's message: "{request.message}"
-
-RULES:
-1. Use ONLY the data above. If a requested detail isn't present, state what IS known and note the rest isn't in the ingested data.
-2. When describing an incident, always cite its incident ID.
-3. For statistical/aggregate questions, use the INGESTED DATA SUMMARY.
-4. For a new problem the user reports, recommend steps only from similar past incidents and cite them.
-5. If no relevant incident is found, do not give a generic refusal - briefly tell the user what you can help with and mention the available applications and LOBs from the summary.
-6. Be concise, specific, and conversational."""
-
+        # Stats answers are exact Counter-based math; the ranked top_matches used for
+        # the analysis card are unrelated to that filter and would show a misleading,
+        # unrelated "supporting incident" alongside a pure count/aggregate answer.
+        intent = (result.get("query_analysis") or {}).get("intent")
         analysis = None
-        if is_incident and relevant:
-            # Run the graph for structured analysis
-            try:
-                graph = get_incident_graph()
-                result = graph.invoke({
-                    "description": request.message,
-                    "application": None,
-                    "environment": "PROD",
-                    "structured_incident": None,
-                    "retrieved_incidents": None,
-                    "evidence": None,
-                    "recommendation": None,
-                    "confidence": None,
-                    "error": None,
-                })
-                recommendation = result.get("recommendation", {})
-                if recommendation:
-                    analysis = ResolutionResponse(**recommendation)
-            except Exception as e:
-                logger.warning(f"Graph analysis failed, using search results only: {e}")
+        if intent != "stats" and not _response_says_no_match(response_text):
+            analysis = _build_chat_analysis(request.message, result.get("top_matches") or [])
 
-        response_text = llm.generate(prompt)
-        return ChatResponse(response=response_text, analysis=analysis, has_analysis=analysis is not None)
+        history_service.record_turn(
+            session_id,
+            request.message,
+            response_text,
+            analysis=analysis.model_dump() if analysis else None,
+        )
+        return ChatResponse(
+            response=response_text,
+            analysis=analysis,
+            has_analysis=analysis is not None,
+            session_id=session_id,
+        )
 
     except Exception as e:
         logger.error(f"Chat failed: {e}")
         raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
+
+
+_NO_MATCH_PHRASES = [
+    "could not find", "couldn't find", "no previously-recorded incident",
+    "no previously recorded incident", "not found in the ingested data",
+    "none of the", "no match", "no relevant incident", "no record of",
+]
+
+
+def _response_says_no_match(response_text: str) -> bool:
+    """Guards against the analysis card citing a match the answer text itself denies."""
+    text_l = (response_text or "").lower()
+    return any(phrase in text_l for phrase in _NO_MATCH_PHRASES)
+
+
+def _build_chat_analysis(user_message: str, top_matches: list) -> Optional[ResolutionResponse]:
+    if not top_matches:
+        return None
+
+    best_score = float(top_matches[0].get("score", 0.0))
+    if best_score >= 0.85:
+        confidence_level = "HIGH"
+    elif best_score >= 0.65:
+        confidence_level = "MEDIUM"
+    else:
+        confidence_level = "LOW"
+
+    matched_incidents = []
+    likely_root_cause = None
+    recommended_resolution = []
+    seen_resolution = set()
+    evidence = []
+
+    for row in top_matches[:3]:
+        inc = row.get("incident") or {}
+        incident_id = inc.get("incident_id")
+        if not incident_id:
+            continue
+
+        matched_incidents.append({
+            "incident_id": incident_id,
+            "similarity": round(float(row.get("score", 0.0)), 2),
+            "reason": row.get("reason", "retrieval match"),
+        })
+
+        evidence.append({
+            "incident_id": incident_id,
+            "source_thread_id": inc.get("source_thread_id"),
+            "source_message_ids": inc.get("source_message_ids") or [],
+        })
+
+        if not likely_root_cause and inc.get("root_cause"):
+            likely_root_cause = inc.get("root_cause")
+
+        for step in inc.get("resolution") or []:
+            key = step.strip().lower()
+            if key and key not in seen_resolution:
+                seen_resolution.add(key)
+                recommended_resolution.append(step)
+            if len(recommended_resolution) >= 5:
+                break
+        if len(recommended_resolution) >= 5:
+            break
+
+    warnings = ["Verify production conditions before applying historical resolution steps."]
+    if confidence_level == "LOW":
+        warnings.insert(0, "Low-confidence match. Manual investigation is recommended.")
+    elif confidence_level == "MEDIUM":
+        warnings.insert(0, "Medium-confidence match. Validate assumptions before action.")
+
+    if not matched_incidents:
+        return None
+
+    return ResolutionResponse(
+        incident_summary=user_message,
+        likely_root_cause=likely_root_cause,
+        confidence=round(best_score, 2),
+        confidence_level=confidence_level,
+        matched_incidents=matched_incidents,
+        recommended_resolution=recommended_resolution,
+        evidence=evidence,
+        warnings=warnings,
+    )
 
 
 def _incident_to_response(incident) -> IncidentResponse:
